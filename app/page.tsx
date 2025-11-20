@@ -1,4 +1,4 @@
-import Image from "next/image";
+/* import Image from "next/image";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -63,4 +63,16 @@ export default function Home() {
       </main>
     </div>
   );
+}
+ */
+
+import Link from 'next/link'
+
+export default function Page() {
+  return (
+    <div>
+      {<h1>Home</h1>}
+      <Link href="/about">About</Link>
+    </div>
+  )
 }
