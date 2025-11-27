@@ -16,7 +16,7 @@ const Header: React.FC = () => {
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   return (
     <>
-      <Button onClick={() => setRegisterModalOpen(true)}>
+      <Button type="primary" onClick={() => setRegisterModalOpen(true)}>
         Open Register Modal
       </Button>
       <RegisterModal

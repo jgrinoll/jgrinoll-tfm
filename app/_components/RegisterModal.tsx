@@ -1,5 +1,6 @@
 import {
   Button,
+  Divider,
   Flex,
   Form,
   FormProps,
@@ -41,7 +42,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
 
     const { rowsAffected, errorMsg } = await registerUser(userData);
     if (rowsAffected > 0) {
-      messageApi.success("User registered successfully!");
+      messageApi.success("T'has registrat correctament!");
       if (onRegister) onRegister();
     } else {
       messageApi.error(errorMsg);
@@ -51,76 +52,97 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   };
 
   return (
-    <Modal {...props} footer={null}>
+    <Modal
+      {...props}
+      footer={
+        <Flex justify="center">
+          <Button
+            type="primary"
+            htmlType="submit"
+            form="register-form"
+            loading={registerLoading}
+          >
+            Registrar-me
+          </Button>
+        </Flex>
+      }
+      title="Registrar-me"
+    >
       {messageContext}
+      <Divider style={{ border: "1px solid #2A2A2A" }} />
       <Form
+        id="register-form"
         name="register-form"
         labelCol={{ span: 7 }}
         wrapperCol={{ span: 17 }}
         onFinish={onFinish}
       >
         <Form.Item<FieldType>
-          label="Email"
+          label="Correu electrònic"
           name="email"
           rules={[
-            { required: true, message: "A valid email is required!" },
-            { type: "email", message: "The email address is not valid!" },
-            { max: 100, message: "The email must not exceed 100 characters!" },
+            { required: true, message: "El correu electrònic és necessari!" },
+            { type: "email", message: "El correu electrònic no és vàlid!" },
+            {
+              max: 100,
+              message: "El correu electrònic no pot superar els 100 caràcters!",
+            },
           ]}
         >
           <Input />
         </Form.Item>
         <Form.Item<FieldType>
-          label="Username"
+          label="Nom d'usuari"
           name="username"
           rules={[
-            { required: true, message: "Please enter a username!" },
-            { max: 50, message: "The username must not exceed 50 characters!" },
+            { required: true, message: "El nom d'usuari és obligatori!" },
+            {
+              max: 50,
+              message: "El nom d'usuari no pot superar els 50 caràcters!",
+            },
           ]}
         >
           <Input />
         </Form.Item>
         <Form.Item<FieldType>
-          label="Password"
+          label="Contrasenya"
           name="password"
           rules={[
-            { required: true, message: "Please enter a password!" },
+            { required: true, message: "La contrasenya és obligatòria!" },
             {
               min: 8,
-              message: "The password must have at least 8 characters!",
+              message: "La contrasenya ha de tenir un mínim de 8 caràcters!",
             },
             {
               max: 30,
-              message: "The password must not exceed 30 characters!",
+              message: "La contrasenya no pot superar els 30 caràcters!",
             },
           ]}
         >
           <Input.Password />
         </Form.Item>
         <Form.Item<FieldType>
-          label="Confirm Password"
+          label="Confirma la contrasenya"
           name="confirmPassword"
           rules={[
-            { required: true, message: "Please confirm your password!" },
+            {
+              required: true,
+              message: "És obligatori confirmar la contrasenya!",
+            },
             ({ getFieldValue }) => ({
               validator(_, value) {
                 if (!value || getFieldValue("password") === value) {
                   return Promise.resolve();
                 }
-                return Promise.reject(new Error("The passwords do not match!"));
+                return Promise.reject(
+                  new Error("Les contrasenyes no coincideixen!")
+                );
               },
             }),
           ]}
         >
           <Input.Password />
         </Form.Item>
-        <Flex justify="end" gap={10}>
-          {/* <Button onClick={() => message.success("Test succeeded")}>Show message</Button> */}
-          <Button onClick={props.onCancel}>Cancel</Button>
-          <Button type="primary" htmlType="submit" loading={registerLoading}>
-            Register
-          </Button>
-        </Flex>
       </Form>
     </Modal>
   );

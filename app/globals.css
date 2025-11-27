@@ -1,13 +1,6 @@
-:root {
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 html,
@@ -39,4 +32,23 @@ a {
   html {
     color-scheme: dark;
   }
+}
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: #f7f8fa;
+}
+
+/* Not supported in ConfigProvider apparently... */
+.ant-modal-container {
+  border: 5px solid #ab77ff !important;
+  border-radius: 16px !important;
+}
+
+
+label {
+  font-weight: 800;
 }

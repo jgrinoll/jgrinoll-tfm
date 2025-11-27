@@ -1,0 +1,50 @@
+import { ThemeConfig } from "antd";
+export const appTheme: ThemeConfig = {
+  token: {
+    fontFamily: "Poppins, sans-serif",
+    colorPrimary: "#ab77ff",
+    colorBgBase: "#fbf7ef",
+    colorTextBase: "#2A2A2A",
+    borderRadius: 12,
+    padding: 12,
+    paddingLG: 16,
+    paddingXL: 20,
+    controlHeight: 44,
+    fontSize: 16,
+  },
+  components: {
+    Button: {
+      borderRadius: 12,
+      paddingInline: 20,
+      controlHeight: 44,
+      fontWeight: 800,
+    },
+    Input: {
+      colorPrimary: "#eb2f96",
+      algorithm: true, // Enable algorithm
+      borderRadius: 12,
+      controlHeight: 44,
+      colorBgBase: "#ffffff",
+    },
+    Card: {
+      borderRadius: 16,
+      padding: 20,
+      colorBgContainer: "#fcf1f4",
+      boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+    },
+    Select: {
+      borderRadius: 12,
+      controlHeight: 44,
+    },
+    Modal: {
+      colorBgElevated: "#fcf1f4",
+      colorBorder: "#ab77ff",
+      borderRadiusLG: 16,
+      paddingLG: 24,
+    },
+    Form: {
+      labelHeight: 16,
+      fontWeightStrong: 800
+    }
+  },
+};
