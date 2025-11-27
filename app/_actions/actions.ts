@@ -54,7 +54,15 @@ export async function registerUser(
     const sqlError = err as MySQLError;
     switch (sqlError.code) {
       case "ER_DUP_ENTRY":
+        return {
+          rowsAffected: 0,
+          errorMsg: "This email is already registered.",
+        };
+      default:
+        return {
+          rowsAffected: 0,
+          errorMsg: "Unexpected error while registering user.",
+        };
     }
-    return { rowsAffected: 0, errorMsg: "This email is already registered." };
   }
 }
