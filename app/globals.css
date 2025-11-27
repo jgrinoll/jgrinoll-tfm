@@ -40,6 +40,7 @@ a {
 body {
   font-family: "Poppins", sans-serif;
   background: #f7f8fa;
+  margin: 0;
 }
 
 /* Not supported in ConfigProvider apparently... */
@@ -48,7 +49,16 @@ body {
   border-radius: 16px !important;
 }
 
+.ant-layout-footer {
+  font-size: 12 !important;
+}
 
 label {
   font-weight: 800;
+}
+
+#logo {
+  height: calc(
+    var(--ant-layout-header-height) - var(--ant-layout-header-padding) * 2
+  );
 }

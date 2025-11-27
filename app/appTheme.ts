@@ -44,7 +44,15 @@ export const appTheme: ThemeConfig = {
     },
     Form: {
       labelHeight: 16,
-      fontWeightStrong: 800
-    }
+      fontWeightStrong: 800,
+    },
+    Layout: {
+      headerBg: "#fbf7ef",
+      headerPadding: 10,
+      bodyBg: "#fcf1f4",
+      /* bodyBg: "#fbf7ef", */
+      footerBg: "#fbf7ef",
+      footerPadding: 0,
+    },
   },
 };

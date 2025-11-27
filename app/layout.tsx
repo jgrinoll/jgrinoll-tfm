@@ -1,10 +1,12 @@
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { App } from "antd";
+import { App, Flex, Layout } from "antd";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import AppConfigProvider from "./_components/AppConfigProvider";
 import Header from "./_components/Header";
 import "./globals.css";
+import { Content } from "antd/es/layout/layout";
+import Footer from "./_components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,14 +29,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" style={{ height: "100%" }}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable}`}
+        style={{ height: "100%" }}
+      >
         {/* Provided by AntD to extract and inject antd first creen styles into HTML to avoid page flicker */}
         <AppConfigProvider>
           <AntdRegistry>
             <App>
-              <Header />
-              {children}
+              <Layout>
+                <Flex vertical style={{ height: "100%" }}>
+                  <Header />
+                  <Content style={{ flex: 1 }}>{children}</Content>
+                  <Footer />
+                </Flex>
+              </Layout>
             </App>
           </AntdRegistry>
         </AppConfigProvider>
