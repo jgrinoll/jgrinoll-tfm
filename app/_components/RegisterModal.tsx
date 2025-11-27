@@ -9,7 +9,7 @@ import {
   ModalProps,
 } from "antd";
 import React, { useState } from "react";
-import { registerUser } from "../_actions/actions";
+import { register } from "../_actions/auth_actions";
 import RegisterUserDTO from "../_models/RegisterUserDTO";
 
 type FieldType = {
@@ -39,7 +39,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
       plainPassword: formValues.password,
     };
 
-    const { rowsAffected, errorMsg } = await registerUser(userData);
+    const { rowsAffected, errorMsg } = await register(userData);
     if (rowsAffected > 0) {
       messageApi.success("User registered successfully!");
       if (onRegister) onRegister();

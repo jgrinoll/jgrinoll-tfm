@@ -1,8 +1,13 @@
 "use client";
 
 import { Button } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RegisterModal from "./RegisterModal";
+import SessionButton from "./SessionButton";
+import { getSessionInfo } from "../_actions/auth_actions";
+import { useSetAtom } from "jotai";
+import { userDataAtom } from "../_jotai/atoms";
+import { getUserData } from "../_actions/user_actions";
 
 /** This component must:
  * - Display the logo at the top left of the page with a link to the start page
@@ -14,6 +19,21 @@ import RegisterModal from "./RegisterModal";
  */
 const Header: React.FC = () => {
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
+  const setUserData = useSetAtom(userDataAtom);
+
+  useEffect(() => {
+    // Check if the user is logged in
+    getSessionInfo().then(async (sessionInfo) => {
+      if (!sessionInfo) {
+        setUserData(null);
+        return;
+      }
+
+      setUserData(await getUserData(sessionInfo?.id));
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <Button onClick={() => setRegisterModalOpen(true)}>
@@ -24,6 +44,7 @@ const Header: React.FC = () => {
         onRegister={() => setRegisterModalOpen(false)}
         onCancel={() => setRegisterModalOpen(false)}
       />
+      <SessionButton />
     </>
   );
 };
