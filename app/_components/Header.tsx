@@ -1,9 +1,8 @@
 "use client";
 
-import { Button, Modal } from "antd";
+import { Button } from "antd";
 import { useState } from "react";
 import RegisterModal from "./RegisterModal";
-import { register } from "module";
 
 /** This component must:
  * - Display the logo at the top left of the page with a link to the start page

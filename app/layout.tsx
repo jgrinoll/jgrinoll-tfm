@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "./_components/Header";
-/* import Header from "./_components/Header"; */
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { App } from "antd";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,8 +28,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Header />
-        {children}
+        {/* Provided by AntD to extract and inject antd first creen styles into HTML to avoid page flicker */}
+        <AntdRegistry>
+          <App>
+            <Header />
+            {children}
+          </App>
+        </AntdRegistry>
       </body>
     </html>
   );

@@ -1,5 +1,16 @@
-import { Button, Flex, Form, FormProps, Input, Modal, ModalProps } from "antd";
+import {
+  Button,
+  Flex,
+  Form,
+  FormProps,
+  Input,
+  message,
+  Modal,
+  ModalProps,
+} from "antd";
 import React, { useState } from "react";
+import { registerUser } from "../_actions/actions";
+import RegisterUserDTO from "../_models/RegisterUserDTO";
 
 type FieldType = {
   email: string;
@@ -15,35 +26,38 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   ...props
 }) => {
   const [registerLoading, setRegisterLoading] = useState(false);
+  const [messageApi, messageContext] = message.useMessage();
 
-  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    console.log("Success:", values);
+  const onFinish: FormProps<FieldType>["onFinish"] = async (formValues) => {
+    console.log("Success:", formValues);
 
     setRegisterLoading(true);
-    // TODO - POST the register endpoint
 
-    setTimeout(() => {
-      setRegisterLoading(false);
+    const userData: RegisterUserDTO = {
+      email: formValues.email,
+      username: formValues.username,
+      plainPassword: formValues.password,
+    };
+
+    const { rowsAffected, errorMsg } = await registerUser(userData);
+    if (rowsAffected > 0) {
+      messageApi.success("User registered successfully!");
       if (onRegister) onRegister();
-    }, 2000);
-  };
+    } else {
+      messageApi.error(errorMsg);
+    }
 
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo
-  ) => {
-    // Hi ha hagut algun error validant el formulari
-    console.log("Failed:", errorInfo);
+    setRegisterLoading(false);
   };
 
   return (
     <Modal {...props} footer={null}>
+      {messageContext}
       <Form
-        id="register-form"
         name="register-form"
         labelCol={{ span: 7 }}
         wrapperCol={{ span: 17 }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
       >
         <Form.Item<FieldType>
           label="Email"
@@ -75,6 +89,10 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
               min: 8,
               message: "The password must have at least 8 characters!",
             },
+            {
+              max: 30,
+              message: "The password must not exceed 30 characters!",
+            },
           ]}
         >
           <Input.Password />
@@ -97,6 +115,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
           <Input.Password />
         </Form.Item>
         <Flex justify="end" gap={10}>
+          {/* <Button onClick={() => message.success("Test succeeded")}>Show message</Button> */}
           <Button onClick={props.onCancel}>Cancel</Button>
           <Button type="primary" htmlType="submit" loading={registerLoading}>
             Register
