@@ -28,9 +28,10 @@ export const appTheme: ThemeConfig = {
     },
     Card: {
       borderRadius: 16,
-      padding: 20,
-      colorBgContainer: "#fcf1f4",
+      bodyPadding: 5,
+      colorBgContainer: "#fbf7ef",
       boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+      colorBorder: "#ab77ff",
     },
     Select: {
       borderRadius: 12,

@@ -49,6 +49,11 @@ body {
   border-radius: 16px !important;
 }
 
+.ant-card-bordered {
+  border: 1px solid #ab77ff !important;
+  border-radius: 16px !important;
+}
+
 .ant-layout-footer {
   font-size: 12 !important;
 }

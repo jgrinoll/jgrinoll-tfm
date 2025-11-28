@@ -1,0 +1,67 @@
+"use client";
+import { Book } from "@/app/_lib/models/Book";
+import { Button, Card, Col, Flex, Image, Row, Space } from "antd";
+import Paragraph from "antd/es/typography/Paragraph";
+import Title from "antd/es/typography/Title";
+import React from "react";
+import ReviewsInfo from "./ReviewsInfo";
+import { useRouter } from "next/navigation";
+import BookCover from "./BookCover";
+
+interface BookCardProps {
+  book: Book;
+}
+const BookCard: React.FC<BookCardProps> = ({ book }) => {
+  const router = useRouter();
+  return (
+    <Card key={book.id} style={{ marginBottom: "16px" }}>
+      <Row>
+        <Col span={6}>
+          <Flex
+            justify="center"
+            align="center"
+            style={{ height: "100%", width: "100%" }}
+          >
+            <BookCover imageLinks={book.volumeInfo.imageLinks} />
+          </Flex>
+        </Col>
+        <Col span={18} style={{ paddingLeft: "16px" }}>
+          <Flex vertical style={{ width: "100%", height: "100%" }}>
+            <Title level={5} style={{ margin: 0 }}>
+              {book.volumeInfo.title}
+            </Title>
+            <Paragraph style={{ margin: 0 }}>
+              <small>{book.volumeInfo.authors?.join(", ")}</small>
+            </Paragraph>
+            <ReviewsInfo bookId={book.id} />
+            <Flex
+              justify="space-evenly"
+              style={{
+                marginTop: "auto",
+                paddingTop: ".5rem",
+                marginBottom: ".5rem",
+              }}
+            >
+              <Button
+                type="primary"
+                size="small"
+                onClick={() => router.push(`/books/${book.id}`)}
+              >
+                Veure detall
+              </Button>
+              <Button
+                type="primary"
+                size="small"
+                onClick={() => router.push(`/books/${book.id}`)}
+              >
+                Vull Llegir
+              </Button>
+            </Flex>
+          </Flex>
+        </Col>
+      </Row>
+    </Card>
+  );
+};
+
+export default BookCard;
