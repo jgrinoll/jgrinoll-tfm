@@ -15,7 +15,7 @@ export const searchBooks = async (
   );
 
   console.log("Google books response: ", res);
-  
+
   const json = (await res.json()) as GoogleBooksSearchResponse;
   console.log("Google books response body JSON: ", res);
   return json;

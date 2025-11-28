@@ -7,14 +7,26 @@ interface BookCoverProps {
 }
 const BookCover: React.FC<BookCoverProps> = ({ imageLinks }) => {
   console.log("Trying to display cover of: ", imageLinks);
-  if (!imageLinks || !imageLinks.thumbnail) {
+  if (!imageLinks) {
     // TODO - Add a placeholder image here
     return null;
   }
 
+  // Get any of the available sizes, prioritizing larger ones
+  // He vist que al llistar només hi ha smallThumbnail i thumbnail
+  const src =
+    imageLinks.extraLarge ||
+    imageLinks.large ||
+    imageLinks.medium ||
+    imageLinks.small ||
+    imageLinks.thumbnail ||
+    imageLinks.smallThumbnail ||
+    // TODO - Add a placeholder image here
+    "";
+
   return (
     <Image
-      src={imageLinks.thumbnail}
+      src={src}
       style={{
         borderTopRightRadius: "1rem",
         borderBottomRightRadius: "1rem",

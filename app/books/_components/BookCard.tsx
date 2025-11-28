@@ -16,7 +16,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
   return (
     <Card key={book.id} style={{ marginBottom: "16px" }}>
       <Row>
-        <Col span={6}>
+        <Col span={8}>
           <Flex
             justify="center"
             align="center"
@@ -25,7 +25,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
             <BookCover imageLinks={book.volumeInfo.imageLinks} />
           </Flex>
         </Col>
-        <Col span={18} style={{ paddingLeft: "16px" }}>
+        <Col span={16} style={{ paddingLeft: "16px" }}>
           <Flex vertical style={{ width: "100%", height: "100%" }}>
             <Title level={5} style={{ margin: 0 }}>
               {book.volumeInfo.title}

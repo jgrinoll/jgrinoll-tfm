@@ -13,6 +13,10 @@ const BookSearchResultList: React.FC<BookSearchResultListProps> = ({
 }) => {
   console.log("Displaying books: ", books);
 
+  if (!books || books.length === 0) {
+    return <Paragraph>No s'han trobat llibres.</Paragraph>;
+  }
+
   return (
     <>
       <ul style={{ listStyleType: "none", padding: 5 }}>

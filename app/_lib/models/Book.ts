@@ -55,8 +55,12 @@ interface PanelizationSummary {
 }
 
 export interface ImageLinks {
-  smallThumbnail: string;
-  thumbnail: string;
+  smallThumbnail: string | undefined;
+  thumbnail: string | undefined;
+  small: string | undefined;
+  medium: string | undefined;
+  large: string | undefined;
+  extraLarge: string | undefined;
 }
 
 interface SaleInfo {
