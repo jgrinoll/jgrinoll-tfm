@@ -2,7 +2,7 @@ import { Flex } from "antd";
 import { Footer as AntdFooter } from "antd/es/layout/layout";
 function Footer() {
   return (
-    <AntdFooter>
+    <AntdFooter style={{padding: 5}}>
       <Flex vertical justify="space-evenly" align="center">
         <p>
           © 2025 - Universitat Oberta de Catalunya - Tots els drets reservats

@@ -11,8 +11,8 @@ import {
 } from "antd";
 import { useSetAtom } from "jotai";
 import React, { useState } from "react";
-import { getUserData } from "../_actions/user_actions";
-import { userDataAtom } from "../_jotai/atoms";
+import { getUserData } from "../../_actions/user_actions";
+import { userDataAtom } from "../../_jotai/atoms";
 
 type FieldType = {
   email: string;
@@ -51,11 +51,10 @@ const LoginModal: React.FC<LoginModalProps> = ({
       return;
     }
 
-    const loginResult = await res.json();
-    /* const user = await getUserData(loginResult.id);
-    setUserData(user); */
+    const user = await res.json();
+    setUserData(user);
 
-    message.success(`Benvingut, ${loginResult.username}!`);
+    message.success(`Benvingut, ${user.username}!`);
     if (onLogin) onLogin();
     setLoginLoading(false);
   };

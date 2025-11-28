@@ -1,6 +1,8 @@
 import { jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
 import SessionPayload from "../_models/SessionPayload";
+import { getUserData } from "../_actions/user_actions";
+import UserDTO from "../_models/UserDTO";
 
 export async function getSessionInfo() {
   const session = (await cookies()).get("session")?.value;
@@ -62,4 +64,12 @@ async function decrypt(session: string | undefined = "") {
   } catch (error) {
     console.error("Failed to verify session");
   }
+}
+
+export async function getCurrentUser(): Promise<UserDTO | null> {
+  console.log("getCurrentUser called");
+
+  const session = await getSessionInfo();
+  if (!session) return null;
+  return await getUserData(session.id);
 }

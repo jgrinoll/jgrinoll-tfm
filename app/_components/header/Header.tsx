@@ -5,8 +5,8 @@ import { Flex, Form, Input } from "antd";
 import { Header as AntdHeader } from "antd/es/layout/layout";
 import { useSetAtom } from "jotai";
 import { useEffect } from "react";
-import { userDataAtom } from "../_jotai/atoms";
-import UserDTO from "../_models/UserDTO";
+import { userDataAtom } from "../../_jotai/atoms";
+import UserDTO from "../../_models/UserDTO";
 import SessionButton from "./SessionButton";
 
 /** This component must:

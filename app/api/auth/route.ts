@@ -4,6 +4,7 @@ import { createConnection, RowDataPacket } from "mysql2/promise";
 import { GetDBSettings } from "@/app/_db/DBSettings";
 import bcrypt from "bcrypt";
 import { SignJWT } from "jose";
+import UserDTO from "@/app/_models/UserDTO";
 
 export async function POST(req: Request) {
   try {
@@ -15,7 +16,7 @@ export async function POST(req: Request) {
 
     const db = await createConnection(GetDBSettings());
     const [rows] = await db.execute<RowDataPacket[]>(
-      "SELECT id, username, password FROM users WHERE email = ?",
+      "SELECT id, username, password, avatar_url, level, total_pages_read FROM users WHERE email = ?",
       [email]
     );
 
@@ -28,8 +29,9 @@ export async function POST(req: Request) {
       );
     }
 
-    const user = rows[0] as { id: number; username: string; password: string };
-    const valid = await bcrypt.compare(plainPassword, user.password);
+    const hashedPassword = rows[0].password;
+    const user = rows[0] as UserDTO;
+    const valid = await bcrypt.compare(plainPassword, hashedPassword);
     if (!valid) {
       return NextResponse.json(
         { error: "Invalid credentials" },
@@ -44,7 +46,7 @@ export async function POST(req: Request) {
       .setExpirationTime("2h")
       .sign(secret);
 
-    const res = NextResponse.json({ id: user.id, username: user.username });
+    const res = NextResponse.json(user);
     res.cookies.set("session", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

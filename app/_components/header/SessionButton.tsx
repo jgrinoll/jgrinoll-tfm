@@ -2,9 +2,9 @@ import { LoginOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar } from "antd";
 import { useAtom } from "jotai";
 import { useState } from "react";
-import { userDataAtom } from "../_jotai/atoms";
-import LoginModal from "./LoginModal";
-import RegisterModal from "./RegisterModal";
+import { userDataAtom } from "../../_jotai/atoms";
+import LoginModal from "../auth/LoginModal";
+import RegisterModal from "../auth/RegisterModal";
 
 const SessionButton = () => {
   const [userData, setUserData] = useAtom(userDataAtom);

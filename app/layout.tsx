@@ -5,9 +5,9 @@ import type { Metadata } from "next";
 import { getUserData } from "./_actions/user_actions";
 import AppConfigProvider from "./_components/AppConfigProvider";
 import Footer from "./_components/Footer";
-import Header from "./_components/Header";
+import Header from "./_components/header/Header";
 import "./globals.css";
-import { getSessionInfo } from "./lib/auth_utils";
+import { getCurrentUser, getSessionInfo } from "./lib/auth_utils";
 
 export const metadata: Metadata = {
   title: "Book Tracking App",
@@ -19,8 +19,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getSessionInfo();
-  const user = session ? await getUserData(session.id) : null;
+  const user = await getCurrentUser();
 
   return (
     <html lang="en" style={{ height: "100%" }}>
@@ -32,7 +31,7 @@ export default async function RootLayout({
               <Layout>
                 <Flex vertical style={{ height: "100%" }}>
                   <Header user={user} />
-                  <Content style={{ flex: 1 }}>{children}</Content>
+                  <Content style={{ flex: 1, padding: 5 }}>{children}</Content>
                   <Footer />
                 </Flex>
               </Layout>

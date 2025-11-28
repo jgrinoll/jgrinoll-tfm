@@ -54,5 +54,8 @@ export const appTheme: ThemeConfig = {
       footerBg: "#fbf7ef",
       footerPadding: 0,
     },
+    Typography: {
+      fontSizeHeading1: 18,
+    },
   },
 };

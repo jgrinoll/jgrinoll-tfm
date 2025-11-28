@@ -39,7 +39,7 @@ a {
 
 body {
   font-family: "Poppins", sans-serif;
-  background: #f7f8fa;
+  background: #fcf1f4;
   margin: 0;
 }
 
@@ -69,4 +69,8 @@ label {
 }
 .icon-btn:hover {
   transform: scale(1.2);
+}
+
+.ant-typography h1 {
+  font-weight: 1300; /* target H1 only */
 }
