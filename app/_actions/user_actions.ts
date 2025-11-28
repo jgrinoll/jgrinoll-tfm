@@ -1,5 +1,4 @@
-"use server";
-
+import "server-only";
 import { createConnection, RowDataPacket } from "mysql2/promise";
 import { GetDBSettings } from "../_db/DBSettings";
 import UserDTO from "../_models/UserDTO";

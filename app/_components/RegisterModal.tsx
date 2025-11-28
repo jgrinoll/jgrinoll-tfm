@@ -10,7 +10,6 @@ import {
   ModalProps,
 } from "antd";
 import React, { useState } from "react";
-import { register } from "../_actions/auth_actions";
 import RegisterUserDTO from "../_models/RegisterUserDTO";
 
 type FieldType = {
@@ -40,15 +39,28 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
       plainPassword: formValues.password,
     };
 
-    const { rowsAffected, errorMsg } = await register(userData);
-    if (rowsAffected > 0) {
-      messageApi.success("T'has registrat correctament!");
-      if (onRegister) onRegister();
-    } else {
-      messageApi.error(errorMsg);
+    const res = await fetch("/api/user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    const data = await res
+      .json()
+      .catch(() => ({ ok: false, error: "Invalid response from server" }));
+
+    if (!res.ok) {
+      // Show error message to the user
+      messageApi.error(data?.error || "Registration failed");
+      setRegisterLoading(false);
+      return;
     }
 
+    messageApi.success(`S'ha registrat l'usuari correctament!`);
     setRegisterLoading(false);
+    if (onRegister) onRegister();
   };
 
   return (

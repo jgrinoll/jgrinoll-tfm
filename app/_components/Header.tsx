@@ -1,15 +1,13 @@
 "use client";
 
-import { Button, Flex, Form, Input } from "antd";
-import { useEffect, useState } from "react";
-import RegisterModal from "./RegisterModal";
-import SessionButton from "./SessionButton";
-import { getSessionInfo } from "../_actions/auth_actions";
-import { useSetAtom } from "jotai";
-import { userDataAtom } from "../_jotai/atoms";
-import { getUserData } from "../_actions/user_actions";
+import { SearchOutlined } from "@ant-design/icons";
+import { Flex, Form, Input } from "antd";
 import { Header as AntdHeader } from "antd/es/layout/layout";
-import Icon, { LoginOutlined, SearchOutlined } from "@ant-design/icons";
+import { useSetAtom } from "jotai";
+import { useEffect } from "react";
+import { userDataAtom } from "../_jotai/atoms";
+import UserDTO from "../_models/UserDTO";
+import SessionButton from "./SessionButton";
 
 /** This component must:
  * - Display the logo at the top left of the page with a link to the start page
@@ -19,25 +17,14 @@ import Icon, { LoginOutlined, SearchOutlined } from "@ant-design/icons";
  * - If the user is not logged in
  *      - Display the user image, which navigates to the user profile when clicked.
  */
+type HeaderProps = { user: UserDTO | null };
 type FieldType = {
   query: string;
 };
-const Header: React.FC = () => {
-  const [registerModalOpen, setRegisterModalOpen] = useState(false);
+const Header: React.FC<HeaderProps> = ({ user }) => {
   const setUserData = useSetAtom(userDataAtom);
 
-  useEffect(() => {
-    // Check if the user is logged in
-    getSessionInfo().then(async (sessionInfo) => {
-      if (!sessionInfo) {
-        setUserData(null);
-        return;
-      }
-
-      setUserData(await getUserData(sessionInfo?.id));
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useEffect(() => setUserData(user), [user, setUserData]);
 
   const onSearch = (formData: FieldType) => {
     console.log("Searching string: ", formData.query);
@@ -60,6 +47,7 @@ const Header: React.FC = () => {
             height: "100%",
             paddingLeft: 10,
             paddingRight: 10,
+            flex: 1,
           }}
           onFinish={onSearch}
         >
@@ -85,11 +73,6 @@ const Header: React.FC = () => {
         </Form>
         <SessionButton />
       </Flex>
-      <RegisterModal
-        open={registerModalOpen}
-        onRegister={() => setRegisterModalOpen(false)}
-        onCancel={() => setRegisterModalOpen(false)}
-      />
     </AntdHeader>
   );
 };
