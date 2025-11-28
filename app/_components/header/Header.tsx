@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { userDataAtom } from "../../_lib/jotai/atoms";
 import UserDTO from "../../_lib/models/UserDTO";
 import SessionButton from "./SessionButton";
+import Link from "next/link";
 
 /** This component must:
  * - Display the logo at the top left of the page with a link to the start page
@@ -45,7 +46,11 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
         gap={5}
         style={{ height: "100%" }}
       >
-        <img id="logo" src={"/Logo.png"} />
+        <Link href="/">
+          <Flex align="center" justify="center">
+            <img id="logo" src={"/Logo.png"} />
+          </Flex>
+        </Link>
         <Form
           style={{
             width: "100%",
