@@ -1,8 +1,13 @@
 "use client";
 
 import { Button, Flex, Form, Input } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RegisterModal from "./RegisterModal";
+import SessionButton from "./SessionButton";
+import { getSessionInfo } from "../_actions/auth_actions";
+import { useSetAtom } from "jotai";
+import { userDataAtom } from "../_jotai/atoms";
+import { getUserData } from "../_actions/user_actions";
 import { Header as AntdHeader } from "antd/es/layout/layout";
 import Icon, { LoginOutlined, SearchOutlined } from "@ant-design/icons";
 
@@ -19,6 +24,20 @@ type FieldType = {
 };
 const Header: React.FC = () => {
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
+  const setUserData = useSetAtom(userDataAtom);
+
+  useEffect(() => {
+    // Check if the user is logged in
+    getSessionInfo().then(async (sessionInfo) => {
+      if (!sessionInfo) {
+        setUserData(null);
+        return;
+      }
+
+      setUserData(await getUserData(sessionInfo?.id));
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSearch = (formData: FieldType) => {
     console.log("Searching string: ", formData.query);
@@ -64,11 +83,7 @@ const Header: React.FC = () => {
             </Form.Item>
           </Flex>
         </Form>
-        <LoginOutlined
-          style={{ marginLeft: "auto", fontSize: "1.5rem" }}
-          type="primary"
-          onClick={() => setRegisterModalOpen(true)}
-        />
+        <SessionButton />
       </Flex>
       <RegisterModal
         open={registerModalOpen}

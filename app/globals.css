@@ -28,7 +28,7 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
@@ -61,4 +61,12 @@ label {
   height: calc(
     var(--ant-layout-header-height) - var(--ant-layout-header-padding) * 2
   );
+}
+
+.icon-btn {
+  cursor: pointer;
+  transition: all 100ms ease-in-out;
+}
+.icon-btn:hover {
+  transform: scale(1.2);
 }
