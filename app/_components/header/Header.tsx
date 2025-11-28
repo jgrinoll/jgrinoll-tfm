@@ -4,9 +4,10 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Flex, Form, Input } from "antd";
 import { Header as AntdHeader } from "antd/es/layout/layout";
 import { useSetAtom } from "jotai";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { userDataAtom } from "../../_jotai/atoms";
-import UserDTO from "../../_models/UserDTO";
+import { userDataAtom } from "../../_lib/jotai/atoms";
+import UserDTO from "../../_lib/models/UserDTO";
 import SessionButton from "./SessionButton";
 
 /** This component must:
@@ -22,6 +23,7 @@ type FieldType = {
   query: string;
 };
 const Header: React.FC<HeaderProps> = ({ user }) => {
+  const router = useRouter();
   const setUserData = useSetAtom(userDataAtom);
 
   useEffect(() => setUserData(user), [user, setUserData]);
@@ -29,7 +31,10 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
   const onSearch = (formData: FieldType) => {
     console.log("Searching string: ", formData.query);
 
-    // TODO - Redirect to search page and show results.
+    // TODO - Redirect to search page and show results.// navigate to /search and pass query as a query param
+    if (formData.query) {
+      router.push(`/books?q=${encodeURIComponent(formData.query)}`);
+    }
   };
 
   return (

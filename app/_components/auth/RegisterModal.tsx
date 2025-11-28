@@ -10,7 +10,7 @@ import {
   ModalProps,
 } from "antd";
 import React, { useState } from "react";
-import RegisterUserDTO from "../../_models/RegisterUserDTO";
+import RegisterUserDTO from "../../lib/models/RegisterUserDTO";
 
 type FieldType = {
   email: string;

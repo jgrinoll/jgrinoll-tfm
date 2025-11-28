@@ -1,7 +1,7 @@
 import "server-only";
 import { createConnection, RowDataPacket } from "mysql2/promise";
-import { GetDBSettings } from "../_db/DBSettings";
-import UserDTO from "../_models/UserDTO";
+import { GetDBSettings } from "../_lib/db/DBSettings";
+import UserDTO from "../lib/models/UserDTO";
 
 export const getUserData = async (user_id: number): Promise<UserDTO | null> => {
   const dbConnection = await createConnection(GetDBSettings());

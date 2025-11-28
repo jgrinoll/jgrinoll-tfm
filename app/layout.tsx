@@ -2,12 +2,11 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { App, Flex, Layout } from "antd";
 import { Content } from "antd/es/layout/layout";
 import type { Metadata } from "next";
-import { getUserData } from "./_actions/user_actions";
 import AppConfigProvider from "./_components/AppConfigProvider";
 import Footer from "./_components/Footer";
 import Header from "./_components/header/Header";
 import "./globals.css";
-import { getCurrentUser, getSessionInfo } from "./lib/auth_utils";
+import { getCurrentUser } from "./_lib/auth_utils";
 
 export const metadata: Metadata = {
   title: "Book Tracking App",

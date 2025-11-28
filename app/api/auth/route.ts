@@ -1,10 +1,10 @@
 import "server-only";
 import { NextResponse } from "next/server";
 import { createConnection, RowDataPacket } from "mysql2/promise";
-import { GetDBSettings } from "@/app/_db/DBSettings";
+import { GetDBSettings } from "@/app/_lib/db/DBSettings";
 import bcrypt from "bcrypt";
 import { SignJWT } from "jose";
-import UserDTO from "@/app/_models/UserDTO";
+import UserDTO from "@/app/lib/models/UserDTO";
 
 export async function POST(req: Request) {
   try {

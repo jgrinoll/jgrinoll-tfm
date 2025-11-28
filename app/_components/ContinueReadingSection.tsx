@@ -1,6 +1,6 @@
 "use client";
 import { useAtomValue } from "jotai";
-import { userDataAtom } from "../_jotai/atoms";
+import { userDataAtom } from "../_lib/jotai/atoms";
 
 export default function ContinueReadingSection() {
   const user = useAtomValue(userDataAtom);

@@ -1,4 +1,5 @@
 "use client";
+import { userDataAtom } from "@/app/_lib/jotai/atoms";
 import {
   Button,
   Flex,
@@ -11,8 +12,6 @@ import {
 } from "antd";
 import { useSetAtom } from "jotai";
 import React, { useState } from "react";
-import { getUserData } from "../../_actions/user_actions";
-import { userDataAtom } from "../../_jotai/atoms";
 
 type FieldType = {
   email: string;

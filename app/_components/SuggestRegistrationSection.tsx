@@ -1,6 +1,6 @@
 "use client";
 import { useAtomValue } from "jotai";
-import { userDataAtom } from "../_jotai/atoms";
+import { userDataAtom } from "../_lib/jotai/atoms";
 import { Button, Flex } from "antd";
 import RegisterModal from "./auth/RegisterModal";
 import { useState } from "react";

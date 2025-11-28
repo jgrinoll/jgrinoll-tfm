@@ -5,11 +5,11 @@ import {
   ResultSetHeader,
   RowDataPacket,
 } from "mysql2/promise";
-import { GetDBSettings } from "@/app/_db/DBSettings";
+import { GetDBSettings } from "@/app/_lib/db/DBSettings";
 import bcrypt from "bcrypt";
 import { SignJWT } from "jose";
 import { validateRegisterFields } from "@/app/lib/utils/field_validations";
-import RegisterUserDTO from "@/app/_models/RegisterUserDTO";
+import RegisterUserDTO from "@/app/lib/models/RegisterUserDTO";
 
 type MySQLError = {
   code: string;
