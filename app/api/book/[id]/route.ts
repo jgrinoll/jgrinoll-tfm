@@ -4,11 +4,8 @@ import { RowDataPacket } from "mysql2/promise";
 import { NextResponse } from "next/server";
 
 interface BookRowDataPacket extends RowDataPacket, Book {}
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const bookId = params.id;
+export async function GET(req: Request, params: Promise<{ id: string }>) {
+  const { id: bookId } = await params;
   const dbConnection = dbConnectionPool;
 
   const sql = "SELECT * FROM books WHERE id = ?";

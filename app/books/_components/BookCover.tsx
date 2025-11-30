@@ -1,5 +1,5 @@
 import { ImageLinks } from "@/app/_lib/models/GoogleBook";
-import { Image } from "antd";
+import { Image, message } from "antd";
 import SkeletonImage from "antd/es/skeleton/Image";
 import React, { useEffect, useState } from "react";
 
@@ -12,24 +12,32 @@ const BookCover: React.FC<BookCoverProps> = ({
   size = "default",
 }) => {
   const [loading, setLoading] = useState(size === "largest");
-  const [src, setSrc] = useState<string | null>(imageLinks.thumbnail ?? null); // We first load the thumbnail size image for a faster first load.
+  const [src, setSrc] = useState<string | null>(imageLinks?.thumbnail ?? null); // We first load the thumbnail size image for a faster first load.
 
   useEffect(() => {
     const getAvailableLargestSize = async () => {
       setLoading(true);
-      const resp = await fetch("/api/google_books/available_thumbnail", {
-        method: "POST",
-        body: JSON.stringify(imageLinks),
-      });
 
-      if (resp.ok) {
-        const body = await resp.json();
-        setSrc(body);
+      try {
+        const resp = await fetch("/api/google_books/available_thumbnail", {
+          method: "POST",
+          body: JSON.stringify(imageLinks),
+        });
+
+        if (resp.ok) {
+          const body = await resp.json();
+          setSrc(body);
+        }
+      } catch (err) {
+        message.error(
+          `Hi ha hagut un error comprovant les dades del llibre a les llistes de l'usuari: ${err}`
+        );
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
-    if (size === "largest") {
+    if (imageLinks && size === "largest") {
       // TODO - Maybe get url from our caché if available to reduce load time.
       getAvailableLargestSize();
     }

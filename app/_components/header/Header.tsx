@@ -4,12 +4,13 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Flex, Form, Input } from "antd";
 import { Header as AntdHeader } from "antd/es/layout/layout";
 import { useSetAtom } from "jotai";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { userDataAtom } from "../../_lib/jotai/atoms";
 import UserDTO from "../../_lib/models/UserDTO";
 import SessionButton from "./SessionButton";
-import Link from "next/link";
+import Image from "next/image";
 
 /** This component must:
  * - Display the logo at the top left of the page with a link to the start page
@@ -30,8 +31,6 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
   useEffect(() => setUserData(user), [user, setUserData]);
 
   const onSearch = (formData: FieldType) => {
-    console.log("Searching string: ", formData.query);
-
     if (formData.query) {
       router.push(`/books?q=${encodeURIComponent(formData.query)}`);
     }
@@ -54,7 +53,13 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
       >
         <Link href="/">
           <Flex align="center" justify="center">
-            <img id="logo" src={"/Logo.png"} />
+            <Image
+              id="logo"
+              src={"/Logo.png"}
+              alt="Website logo"
+              width={60}
+              height={48}
+            />
           </Flex>
         </Link>
         <Form

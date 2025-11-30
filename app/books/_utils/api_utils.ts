@@ -40,7 +40,7 @@ export const getBookDetails = async (bookId: string): Promise<GoogleBook> => {
   );
 
   const book = (await res.json()) as GoogleBook;
-  insertBook(book);
+  cacheBooksInDatabase([book]);
 
   return book;
 };
@@ -104,9 +104,9 @@ const insertBook = async (book: GoogleBook) => {
   const sql =
     "INSERT INTO books (id, title, authors, thumbnail, page_count, categories, description) VALUES (?,?,?,?,?,?,?)";
 
-  const thumbnail = await getLargestAvailableThumbnail(
-    book.volumeInfo.imageLinks
-  );
+  const thumbnail = book.volumeInfo.imageLinks
+    ? await getLargestAvailableThumbnail(book.volumeInfo.imageLinks)
+    : null;
 
   const values = [
     book.id,

@@ -4,6 +4,9 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const imageLinks: ImageLinks = await req.json();
-  const availableThumbnail = await getLargestAvailableThumbnail(imageLinks);
+
+  const availableThumbnail = imageLinks
+    ? await getLargestAvailableThumbnail(imageLinks)
+    : "";
   return NextResponse.json(availableThumbnail);
 }
