@@ -39,7 +39,14 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
   };
 
   return (
-    <AntdHeader>
+    <AntdHeader
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 1,
+        width: "100%",
+      }}
+    >
       <Flex
         justify="space-between"
         align="center"
