@@ -1,38 +1,63 @@
 import { ImageLinks } from "@/app/_lib/models/Book";
 import { Image } from "antd";
-import React from "react";
+import SkeletonImage from "antd/es/skeleton/Image";
+import React, { useEffect, useState } from "react";
 
 interface BookCoverProps {
   imageLinks: ImageLinks;
+  size?: "default" | "largest";
 }
-const BookCover: React.FC<BookCoverProps> = ({ imageLinks }) => {
-  console.log("Trying to display cover of: ", imageLinks);
+const BookCover: React.FC<BookCoverProps> = ({
+  imageLinks,
+  size = "default",
+}) => {
+  const [loading, setLoading] = useState(size === "largest");
+  const [src, setSrc] = useState<string | null>(imageLinks.thumbnail ?? null); // We first load the thumbnail size image for a faster first load.
+
+  useEffect(() => {
+    const getAvailableLargestSize = async () => {
+      setLoading(true);
+      const resp = await fetch("/api/google_books/available_thumbnail", {
+        method: "POST",
+        body: JSON.stringify(imageLinks),
+      });
+
+      console.log("Available thumbnail response is: ", resp);
+
+      if (resp.ok) {
+        const body = await resp.json();
+        console.log("Available thumbnail is: ", body);
+        setSrc(body);
+      }
+      setLoading(false);
+    };
+
+    if (size === "largest") {
+      getAvailableLargestSize();
+    }
+  }, [imageLinks, size]);
+
   if (!imageLinks) {
-    // TODO - Add a placeholder image here
     return null;
   }
 
-  // Get any of the available sizes, prioritizing larger ones
-  // He vist que al llistar només hi ha smallThumbnail i thumbnail
-  const src =
-    imageLinks.extraLarge ||
-    imageLinks.large ||
-    imageLinks.medium ||
-    imageLinks.small ||
-    imageLinks.thumbnail ||
-    imageLinks.smallThumbnail ||
-    // TODO - Add a placeholder image here
-    "";
-
+  // TODO - Will need a placeholder image if the book doesn't even have "imageLinks"
   return (
-    <Image
-      src={src}
-      style={{
-        borderTopRightRadius: "1rem",
-        borderBottomRightRadius: "1rem",
-        padding: 5,
-      }}
-    />
+    <>
+      {loading && <SkeletonImage active={loading} />}
+      {!loading && (
+        <Image
+          src={src ?? undefined}
+          style={{
+            borderTopRightRadius: "1rem",
+            borderBottomRightRadius: "1rem",
+            padding: 5,
+            maxHeight: "500px",
+          }}
+          alt="Book cover"
+        />
+      )}
+    </>
   );
 };
 

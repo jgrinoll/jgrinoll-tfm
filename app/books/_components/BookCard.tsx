@@ -1,12 +1,12 @@
 "use client";
 import { Book } from "@/app/_lib/models/Book";
-import { Button, Card, Col, Flex, Image, Row, Space } from "antd";
+import { Button, Card, Col, Flex, Row } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
-import React from "react";
-import ReviewsInfo from "./ReviewsInfo";
 import { useRouter } from "next/navigation";
+import React from "react";
 import BookCover from "./BookCover";
+import ReviewsInfo from "./ReviewsInfo";
 
 interface BookCardProps {
   book: Book;

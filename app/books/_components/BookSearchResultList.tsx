@@ -1,8 +1,7 @@
 "use client";
 import { Book } from "@/app/_lib/models/Book";
-import { Card, Spin } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
-import React, { Suspense } from "react";
+import React from "react";
 import BookCard from "./BookCard";
 
 interface BookSearchResultListProps {
@@ -14,7 +13,7 @@ const BookSearchResultList: React.FC<BookSearchResultListProps> = ({
   console.log("Displaying books: ", books);
 
   if (!books || books.length === 0) {
-    return <Paragraph>No s'han trobat llibres.</Paragraph>;
+    return <Paragraph>No s&apos;han trobat llibres.</Paragraph>;
   }
 
   return (
@@ -22,7 +21,7 @@ const BookSearchResultList: React.FC<BookSearchResultListProps> = ({
       <ul style={{ listStyleType: "none", padding: 5 }}>
         {books.map((book) => {
           return (
-            <li>
+            <li key={book.id}>
               <BookCard book={book} />
             </li>
           );

@@ -1,15 +1,14 @@
-import "server-only";
-import { NextResponse } from "next/server";
+import { GetDBSettings } from "@/app/_lib/db/DBSettings";
+import RegisterUserDTO from "@/app/_lib/models/RegisterUserDTO";
+import { validateRegisterFields } from "@/app/_lib/utils/field_validations";
+import bcrypt from "bcrypt";
 import {
   createConnection,
   ResultSetHeader,
   RowDataPacket,
 } from "mysql2/promise";
-import { GetDBSettings } from "@/app/_lib/db/DBSettings";
-import bcrypt from "bcrypt";
-import { SignJWT } from "jose";
-import { validateRegisterFields } from "@/app/lib/utils/field_validations";
-import RegisterUserDTO from "@/app/lib/models/RegisterUserDTO";
+import { NextResponse } from "next/server";
+import "server-only";
 
 type MySQLError = {
   code: string;

@@ -56,7 +56,9 @@ export const appTheme: ThemeConfig = {
       footerPadding: 0,
     },
     Typography: {
-      fontSizeHeading1: 18,
+      fontSizeHeading1: 22,
+      fontSizeHeading2: 18,
+      titleMarginBottom: 0
     },
   },
 };
