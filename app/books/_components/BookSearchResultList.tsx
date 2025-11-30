@@ -16,6 +16,7 @@ const BookSearchResultList: React.FC<BookSearchResultListProps> = ({
     return <Paragraph>No s&apos;han trobat llibres.</Paragraph>;
   }
 
+  // TODO - Implement infinite scroll
   return (
     <>
       <ul style={{ listStyleType: "none", padding: 5 }}>

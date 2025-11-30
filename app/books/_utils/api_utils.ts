@@ -1,8 +1,11 @@
+import { GetDBSettings } from "@/app/_lib/db/DBSettings";
 import {
   Book,
   GoogleBooksSearchResponse,
   ImageLinks,
 } from "@/app/_lib/models/Book";
+import { ResultSetHeader } from "mysql2";
+import { Connection, createConnection, RowDataPacket } from "mysql2/promise";
 
 export const searchBooks = async (
   query: string
@@ -18,7 +21,11 @@ export const searchBooks = async (
     }
   );
 
-  return (await res.json()) as GoogleBooksSearchResponse;
+  const bookSearchResponse = (await res.json()) as GoogleBooksSearchResponse;
+
+  cacheBooksInDatabase(bookSearchResponse.items); // We don't need to await for this, it can be done asynchronously
+
+  return bookSearchResponse;
 };
 
 export const getBookDetails = async (bookId: string): Promise<Book> => {
@@ -32,7 +39,10 @@ export const getBookDetails = async (bookId: string): Promise<Book> => {
     }
   );
 
-  return (await res.json()) as Book;
+  const book = (await res.json()) as Book;
+  insertBook(book);
+
+  return book;
 };
 
 export const getLargestAvailableThumbnail = async (
@@ -66,4 +76,54 @@ export const getLargestAvailableThumbnail = async (
     }
   }
   return biggestThumbnailUrl.replace("http", "https");
+};
+
+const cacheBooksInDatabase = async (books: Book[]) => {
+  const bookIds = books.map((book) => book.id);
+  const sql = "SELECT id FROM books WHERE id NOT IN (?)";
+
+  const dbConnection = await createConnection(GetDBSettings());
+  const [existingRows] = await dbConnection.execute<RowDataPacket[]>(sql, [
+    bookIds,
+  ]);
+
+  const booksToInsert: Book[] = [];
+  books.forEach((book) => {
+    if (existingRows.findIndex((row) => row.id === book.id) === -1)
+      booksToInsert.push(book);
+  });
+
+  for (const book of booksToInsert) {
+    await insertBook(book);
+  }
+
+  await dbConnection.end();
+};
+
+const insertBook = async (book: Book, connection?: Connection) => {
+  const dbConnection = connection ?? (await createConnection(GetDBSettings()));
+
+  const sql =
+    "INSERT INTO books (id, title, authors, thumbnail, page_count, categories, description) VALUES (?,?,?,?,?,?,?)";
+
+  const thumbnail = await getLargestAvailableThumbnail(
+    book.volumeInfo.imageLinks
+  );
+
+  const values = [
+    book.id,
+    book.volumeInfo.title,
+    book.volumeInfo.authors?.join(", "),
+    thumbnail,
+    book.volumeInfo.pageCount,
+    book.volumeInfo.categories?.join(";"),
+    book.volumeInfo.description,
+  ];
+
+  const [queryResult] = await dbConnection.execute<ResultSetHeader>(
+    sql,
+    values
+  );
+
+  console.log("Book added to cache: ", queryResult);
 };

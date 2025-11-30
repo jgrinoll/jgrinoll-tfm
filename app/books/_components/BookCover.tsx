@@ -33,6 +33,7 @@ const BookCover: React.FC<BookCoverProps> = ({
     };
 
     if (size === "largest") {
+      // TODO - Maybe get url from our caché if available to reduce load time.
       getAvailableLargestSize();
     }
   }, [imageLinks, size]);
