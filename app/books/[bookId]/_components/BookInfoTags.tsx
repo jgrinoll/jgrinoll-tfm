@@ -1,10 +1,10 @@
-import { Book } from "@/app/_lib/models/Book";
+import { GoogleBook } from "@/app/_lib/models/GoogleBook";
 import { Flex } from "antd";
 import React from "react";
 import InfoTag from "./InfoTag";
 
 interface BookInfoTagsProps {
-  book: Book;
+  book: GoogleBook;
 }
 const BookInfoTags: React.FC<BookInfoTagsProps> = ({ book }) => {
   const languageNames = new Intl.DisplayNames(["ca"], {

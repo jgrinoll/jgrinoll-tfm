@@ -1,6 +1,7 @@
+import mysql from "mysql2";
 import { ConnectionOptions } from "mysql2";
 
-export const GetDBSettings = (): ConnectionOptions => {
+const GetDBSettings = (): ConnectionOptions => {
   // In this case, we do not have a development database, so development is done on production.
   switch (process.env.NODE_ENV) {
     case "development":
@@ -12,6 +13,11 @@ export const GetDBSettings = (): ConnectionOptions => {
         user: process.env.MYSQL_USER!,
         password: process.env.MYSQL_PASSWORD!,
         database: process.env.MYSQL_DATABASE!,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0,
       };
   }
 };
+
+export default GetDBSettings;

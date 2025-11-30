@@ -32,7 +32,6 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
   const onSearch = (formData: FieldType) => {
     console.log("Searching string: ", formData.query);
 
-    // TODO - Redirect to search page and show results.// navigate to /search and pass query as a query param
     if (formData.query) {
       router.push(`/books?q=${encodeURIComponent(formData.query)}`);
     }

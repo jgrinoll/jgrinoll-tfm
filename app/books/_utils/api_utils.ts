@@ -1,11 +1,11 @@
-import { GetDBSettings } from "@/app/_lib/db/DBSettings";
+import dbConnectionPool from "@/app/_lib/db/db";
 import {
-  Book,
+  GoogleBook,
   GoogleBooksSearchResponse,
   ImageLinks,
-} from "@/app/_lib/models/Book";
+} from "@/app/_lib/models/GoogleBook";
 import { ResultSetHeader } from "mysql2";
-import { Connection, createConnection, RowDataPacket } from "mysql2/promise";
+import { RowDataPacket } from "mysql2/promise";
 
 export const searchBooks = async (
   query: string
@@ -28,7 +28,7 @@ export const searchBooks = async (
   return bookSearchResponse;
 };
 
-export const getBookDetails = async (bookId: string): Promise<Book> => {
+export const getBookDetails = async (bookId: string): Promise<GoogleBook> => {
   const queryParams = new URLSearchParams({
     key: process.env.BOOKS_API_KEY || "",
   });
@@ -39,7 +39,7 @@ export const getBookDetails = async (bookId: string): Promise<Book> => {
     }
   );
 
-  const book = (await res.json()) as Book;
+  const book = (await res.json()) as GoogleBook;
   insertBook(book);
 
   return book;
@@ -78,16 +78,16 @@ export const getLargestAvailableThumbnail = async (
   return biggestThumbnailUrl.replace("http", "https");
 };
 
-const cacheBooksInDatabase = async (books: Book[]) => {
+const cacheBooksInDatabase = async (books: GoogleBook[]) => {
   const bookIds = books.map((book) => book.id);
   const sql = "SELECT id FROM books WHERE id NOT IN (?)";
 
-  const dbConnection = await createConnection(GetDBSettings());
+  const dbConnection = dbConnectionPool;
   const [existingRows] = await dbConnection.execute<RowDataPacket[]>(sql, [
     bookIds,
   ]);
 
-  const booksToInsert: Book[] = [];
+  const booksToInsert: GoogleBook[] = [];
   books.forEach((book) => {
     if (existingRows.findIndex((row) => row.id === book.id) === -1)
       booksToInsert.push(book);
@@ -96,12 +96,10 @@ const cacheBooksInDatabase = async (books: Book[]) => {
   for (const book of booksToInsert) {
     await insertBook(book);
   }
-
-  await dbConnection.end();
 };
 
-const insertBook = async (book: Book, connection?: Connection) => {
-  const dbConnection = connection ?? (await createConnection(GetDBSettings()));
+const insertBook = async (book: GoogleBook) => {
+  const dbConnection = dbConnectionPool;
 
   const sql =
     "INSERT INTO books (id, title, authors, thumbnail, page_count, categories, description) VALUES (?,?,?,?,?,?,?)";
@@ -120,10 +118,5 @@ const insertBook = async (book: Book, connection?: Connection) => {
     book.volumeInfo.description,
   ];
 
-  const [queryResult] = await dbConnection.execute<ResultSetHeader>(
-    sql,
-    values
-  );
-
-  console.log("Book added to cache: ", queryResult);
+  await dbConnection.execute<ResultSetHeader>(sql, values);
 };

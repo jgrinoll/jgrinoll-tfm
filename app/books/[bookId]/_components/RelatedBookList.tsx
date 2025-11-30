@@ -1,8 +1,8 @@
-import { Book } from "@/app/_lib/models/Book";
+import { GoogleBook } from "@/app/_lib/models/GoogleBook";
 import React from "react";
 
 interface RelatedBookListProps {
-  book: Book;
+  book: GoogleBook;
 }
 const RelatedBookList: React.FC<RelatedBookListProps> = ({ book }) => {
   // TODO

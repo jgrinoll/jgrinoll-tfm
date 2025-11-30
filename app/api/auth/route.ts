@@ -1,10 +1,10 @@
-import "server-only";
-import { NextResponse } from "next/server";
-import { createConnection, RowDataPacket } from "mysql2/promise";
-import { GetDBSettings } from "@/app/_lib/db/DBSettings";
+import dbConnectionPool from "@/app/_lib/db/db";
+import UserDTO from "@/app/_lib/models/UserDTO";
 import bcrypt from "bcrypt";
 import { SignJWT } from "jose";
-import UserDTO from "@/app/lib/models/UserDTO";
+import { RowDataPacket } from "mysql2/promise";
+import { NextResponse } from "next/server";
+import "server-only";
 
 export async function POST(req: Request) {
   try {
@@ -14,13 +14,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid fields" }, { status: 400 });
     }
 
-    const db = await createConnection(GetDBSettings());
+    const db = dbConnectionPool;
+
     const [rows] = await db.execute<RowDataPacket[]>(
       "SELECT id, username, password, avatar_url, level, total_pages_read FROM users WHERE email = ?",
       [email]
     );
-
-    await db.end();
 
     if (!rows.length) {
       return NextResponse.json(

@@ -1,4 +1,4 @@
-import { ImageLinks } from "@/app/_lib/models/Book";
+import { ImageLinks } from "@/app/_lib/models/GoogleBook";
 import { getLargestAvailableThumbnail } from "@/app/books/_utils/api_utils";
 import { NextResponse } from "next/server";
 

@@ -1,4 +1,4 @@
-import { ImageLinks } from "@/app/_lib/models/Book";
+import { ImageLinks } from "@/app/_lib/models/GoogleBook";
 import { Image } from "antd";
 import SkeletonImage from "antd/es/skeleton/Image";
 import React, { useEffect, useState } from "react";
@@ -22,11 +22,8 @@ const BookCover: React.FC<BookCoverProps> = ({
         body: JSON.stringify(imageLinks),
       });
 
-      console.log("Available thumbnail response is: ", resp);
-
       if (resp.ok) {
         const body = await resp.json();
-        console.log("Available thumbnail is: ", body);
         setSrc(body);
       }
       setLoading(false);

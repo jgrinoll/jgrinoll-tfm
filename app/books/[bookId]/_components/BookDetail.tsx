@@ -1,6 +1,6 @@
 "use client";
 
-import { Book } from "@/app/_lib/models/Book";
+import { GoogleBook } from "@/app/_lib/models/GoogleBook";
 import { Col, Flex, Row, Space } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
@@ -12,7 +12,7 @@ import BookInfoTags from "./BookInfoTags";
 import RelatedBookList from "./RelatedBookList";
 
 interface BookDetailProps {
-  book: Book;
+  book: GoogleBook;
 }
 const BookDetail: React.FC<BookDetailProps> = ({ book }) => {
   return (

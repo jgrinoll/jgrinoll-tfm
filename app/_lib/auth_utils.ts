@@ -67,8 +67,6 @@ async function decrypt(session: string | undefined = "") {
 }
 
 export async function getCurrentUser(): Promise<UserDTO | null> {
-  console.log("getCurrentUser called");
-
   const session = await getSessionInfo();
   if (!session) return null;
   return await getUserData(session.id);

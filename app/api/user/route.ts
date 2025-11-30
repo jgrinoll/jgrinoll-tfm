@@ -1,11 +1,10 @@
-import { GetDBSettings } from "@/app/_lib/db/DBSettings";
+import dbConnectionPool from "@/app/_lib/db/db";
 import RegisterUserDTO from "@/app/_lib/models/RegisterUserDTO";
 import { validateRegisterFields } from "@/app/_lib/utils/field_validations";
 import bcrypt from "bcrypt";
 import {
-  createConnection,
   ResultSetHeader,
-  RowDataPacket,
+  RowDataPacket
 } from "mysql2/promise";
 import { NextResponse } from "next/server";
 import "server-only";
@@ -29,7 +28,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const dbConnection = await createConnection(GetDBSettings());
+    const dbConnection = dbConnectionPool;
 
     // Duplicate email check
     const [existing] = await dbConnection.execute<RowDataPacket[]>(
@@ -37,7 +36,6 @@ export async function POST(req: Request) {
       [user.email]
     );
     if (existing.length > 0) {
-      await dbConnection.end();
       return NextResponse.json(
         { ok: false, error: "Email already registered" },
         { status: 409 }
@@ -51,7 +49,6 @@ export async function POST(req: Request) {
       "INSERT INTO users (email, username, password) VALUES (?, ?, ?)",
       [user.email, user.username, hashPassword]
     );
-    await dbConnection.end();
 
     return NextResponse.json(
       { ok: true, id: result.insertId },

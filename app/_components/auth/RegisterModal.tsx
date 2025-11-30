@@ -1,3 +1,4 @@
+import RegisterUserDTO from "@/app/_lib/models/RegisterUserDTO";
 import {
   Button,
   Divider,
@@ -10,7 +11,6 @@ import {
   ModalProps,
 } from "antd";
 import React, { useState } from "react";
-import RegisterUserDTO from "../../lib/models/RegisterUserDTO";
 
 type FieldType = {
   email: string;

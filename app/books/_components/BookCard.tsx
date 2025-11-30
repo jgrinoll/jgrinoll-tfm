@@ -1,5 +1,5 @@
 "use client";
-import { Book } from "@/app/_lib/models/Book";
+import { GoogleBook } from "@/app/_lib/models/GoogleBook";
 import { Button, Card, Col, Flex, Row } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
@@ -7,9 +7,10 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import BookCover from "./BookCover";
 import ReviewsInfo from "./ReviewsInfo";
+import AddToListButton from "./AddToListButton";
 
 interface BookCardProps {
-  book: Book;
+  book: GoogleBook;
 }
 const BookCard: React.FC<BookCardProps> = ({ book }) => {
   const router = useRouter();
@@ -49,13 +50,14 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
               >
                 Veure detall
               </Button>
-              <Button
+              <AddToListButton bookId={book.id} />
+              {/* <Button
                 type="primary"
                 size="small"
                 onClick={() => router.push(`/books/${book.id}`)}
               >
                 Vull Llegir
-              </Button>
+              </Button> */}
             </Flex>
           </Flex>
         </Col>
