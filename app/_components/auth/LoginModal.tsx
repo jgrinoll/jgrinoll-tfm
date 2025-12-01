@@ -107,7 +107,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
               }}
             >
               {" "}
-              Registra't!
+              Registra&apos;t!
             </a>
           </p>
           <Flex justify="end" gap={10}>

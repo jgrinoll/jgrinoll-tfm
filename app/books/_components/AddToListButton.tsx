@@ -16,6 +16,7 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({ bookId }) => {
   useEffect(() => {
     const fetchBook = async (bookId: string) => {
       // Fetch book data from database
+      // TODO - Session could be expired, add catch for errors 401 and update website accordingly.
       const response = await fetch(`/api/book/${bookId}/user`);
       if (response.ok) {
         const responseBody = await response.json();
