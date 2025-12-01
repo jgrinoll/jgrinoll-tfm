@@ -7,6 +7,7 @@ import Footer from "./_components/Footer";
 import Header from "./_components/header/Header";
 import "./globals.css";
 import { getCurrentUser } from "./_lib/auth_utils";
+import UpdateReadingProgressModal from "./_components/UpdateReadingProgressModal";
 
 export const metadata: Metadata = {
   title: "Book Tracking App",
@@ -20,6 +21,9 @@ export default async function RootLayout({
 }>) {
   const user = await getCurrentUser();
 
+  console.log("Layout rendering...");
+  
+
   return (
     <html lang="en" style={{ height: "100%" }}>
       <body style={{ height: "100%" }}>
@@ -30,6 +34,7 @@ export default async function RootLayout({
               <Layout>
                 <Flex vertical style={{ height: "100%" }}>
                   <Header user={user} />
+                  <UpdateReadingProgressModal />
                   <Content style={{ flex: 1, padding: 5 }}>{children}</Content>
                   <Footer />
                 </Flex>

@@ -26,6 +26,14 @@ export const appTheme: ThemeConfig = {
       controlHeight: 44,
       colorBgBase: "#ffffff",
     },
+    InputNumber: {
+      colorPrimary: "#eb2f96",
+      algorithm: true, // Enable algorithm
+      borderRadius: 12,
+      controlHeight: 44,
+      controlWidth: 250,
+      colorBgBase: "#ffffff",
+    },
     Card: {
       borderRadius: 16,
       bodyPadding: 5,
@@ -58,7 +66,7 @@ export const appTheme: ThemeConfig = {
     Typography: {
       fontSizeHeading1: 22,
       fontSizeHeading2: 18,
-      titleMarginBottom: 0
+      titleMarginBottom: 0,
     },
   },
 };

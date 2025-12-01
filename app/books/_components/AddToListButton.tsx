@@ -1,15 +1,27 @@
+import {
+  updateReadingProgressModalBookId,
+  updateReadingProgressModalOpen,
+} from "@/app/_lib/jotai/atoms";
 import List, { ListsEnum } from "@/app/_lib/models/ListsEnum";
 import { UserBook } from "@/app/_lib/models/UserBook";
 import { DownOutlined } from "@ant-design/icons";
 import { Button, Dropdown, message, Space } from "antd";
+import { useSetAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 
+// TODO - If user is not logged in when showing this component, it should open the login modal instead.
 interface AddToListButtonProps {
   bookId: string;
 }
 const AddToListButton: React.FC<AddToListButtonProps> = ({ bookId }) => {
   const [userBook, setUserBook] = useState<UserBook | undefined>();
   const [refetchUserBook, setRefetchUserBook] = useState(0);
+  const setUpdateReadingProgressModalOpen = useSetAtom(
+    updateReadingProgressModalOpen
+  );
+  const setUpdateReadingProgressModalBookId = useSetAtom(
+    updateReadingProgressModalBookId
+  );
 
   const [loading, setLoading] = useState(false);
 
@@ -99,13 +111,15 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({ bookId }) => {
     );
   }
 
+  const onUpdateProgress = () => {
+    console.log(`Trying to open update progress modal with book id ${bookId}`);
+
+    setUpdateReadingProgressModalBookId(bookId);
+    setUpdateReadingProgressModalOpen(true);
+  };
   if (userBook.status === "LLEGINT") {
     return (
-      <Button
-        type="primary"
-        size="small"
-        onClick={() => message.warning("Not implemented yet!")}
-      >
+      <Button type="primary" size="small" onClick={onUpdateProgress}>
         Actualitzar progrés
       </Button>
     );

@@ -1,6 +1,6 @@
-import { get } from "http";
-import BookDetail from "./_components/BookDetail";
+import "server-only";
 import { getBookDetails } from "../_utils/api_utils";
+import BookDetail from "./_components/BookDetail";
 
 export default async function Page({
   params,

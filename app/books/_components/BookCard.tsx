@@ -35,6 +35,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
               <small>{book.volumeInfo.authors?.join(", ")}</small>
             </Paragraph>
             <ReviewsInfo bookId={book.id} />
+            {/* // TODO - En pantalles estretes, el botons estan massa junst. */}
             <Flex
               justify="space-evenly"
               style={{
@@ -42,6 +43,8 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
                 paddingTop: ".5rem",
                 marginBottom: ".5rem",
               }}
+              wrap="wrap"
+              gap={5}
             >
               <Button
                 type="primary"
@@ -51,13 +54,6 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
                 Veure detall
               </Button>
               <AddToListButton bookId={book.id} />
-              {/* <Button
-                type="primary"
-                size="small"
-                onClick={() => router.push(`/books/${book.id}`)}
-              >
-                Vull Llegir
-              </Button> */}
             </Flex>
           </Flex>
         </Col>
