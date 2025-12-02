@@ -9,7 +9,6 @@ import { getShortTitle } from "../_lib/utils/book_utils";
 import { getBook } from "../api/book/[id]/route";
 import BookCover from "../books/_components/BookCover";
 
-
 interface FeaturedBookSectionProps {
   bookId: string;
 }
@@ -22,13 +21,10 @@ const FeaturedBookSection: React.FC<FeaturedBookSectionProps> = async ({
 
   return (
     <section>
-      <Title level={1} style={{ textAlign: "center", margin: 0 }}>
+      <Title level={1} style={{ marginBottom: 5 }}>
         Llibre destacat
       </Title>
-      <Title
-        level={2}
-        style={{ textAlign: "center", margin: 0, fontWeight: "normal" }}
-      >
+      <Title level={1} style={{ textAlign: "center", marginBottom: ".75rem" }}>
         {getShortTitle(book.title)}
       </Title>
       <Row>
@@ -42,9 +38,11 @@ const FeaturedBookSection: React.FC<FeaturedBookSectionProps> = async ({
             >
               {Parser(book.description ?? "<b>Sense descripció</b>")}
             </Paragraph>
-            <Button type="primary">
-              <Link href={`/books/${book.id}`}>Veure Detall</Link>
-            </Button>
+            <Flex justify="center" align="center">
+              <Button type="primary">
+                <Link href={`/books/${book.id}`}>Veure Detall</Link>
+              </Button>
+            </Flex>
           </Space>
         </Col>
         <Col span={8}>

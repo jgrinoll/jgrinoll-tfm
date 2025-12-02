@@ -87,12 +87,13 @@ const BookCover: React.FC<BookCoverProps> = ({
             borderBottomRightRadius: "1rem",
             padding: 5,
             height: "100%", // Take parent size
-            width: "100%"
+            width: "100%",
           }}
           alt="Book cover"
           preview={preview}
         />
-      )}{!loading && !preview && (
+      )}
+      {!loading && !preview && (
         <img
           src={src ?? undefined}
           style={{
@@ -101,7 +102,7 @@ const BookCover: React.FC<BookCoverProps> = ({
             padding: 5,
             height: "100%",
             width: "100%",
-            objectFit: "contain"
+            objectFit: "contain",
           }}
           alt="Book cover"
         />

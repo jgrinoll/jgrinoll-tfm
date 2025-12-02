@@ -1,5 +1,5 @@
 "use client";
-import { message, Progress } from "antd";
+import { message, Progress, Spin } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -26,11 +26,13 @@ export default function ContinueReadingSection() {
   const [currentProgresses, setCurrentProgresses] = useState<{
     [key: string]: ReadingProgress;
   }>({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!user) return;
 
     const fetchUserReadingBooks = async () => {
+      setLoading(true);
       console.log("Fetching user books");
       const searchParams = new URLSearchParams({
         status: "LLEGINT",
@@ -53,8 +55,11 @@ export default function ContinueReadingSection() {
       setUserBooks(userBooks);
       console.log("Books retrieved!", userBooks);
 
-      fetchCachedBooks(userBooks);
-      fetchCurrentProgress(userBooks);
+      await Promise.all([
+        fetchCachedBooks(userBooks),
+        fetchCurrentProgress(userBooks),
+      ]);
+      setLoading(false);
     };
 
     const fetchCachedBooks = async (userBooks: UserBook[]) => {
@@ -104,7 +109,6 @@ export default function ContinueReadingSection() {
 
       setCurrentProgresses(newProgresses);
     };
-
     fetchUserReadingBooks();
   }, [user]);
 
@@ -112,35 +116,38 @@ export default function ContinueReadingSection() {
 
   console.log("Books are ", books);
 
+  if (loading) return <Spin />;
   return (
     <section>
       <Title level={1}>Continuar llegint</Title>
       <Paragraph>Actualitza el progrés dels teus llibres</Paragraph>
       <ul className={styles["continue-reading-list"]}>
-        {userBooks.map((userBook) => (
-          <li
-            key={userBook.book_id}
-            onClick={() => {
-              console.log(`Book ${userBook.book_id} clicked!`);
+        {loading && <Spin />}
+        {!loading &&
+          userBooks.map((userBook) => (
+            <li
+              key={userBook.book_id}
+              onClick={() => {
+                console.log(`Book ${userBook.book_id} clicked!`);
 
-              setUpdateProgressModalOpen(true);
-              setUpdateReadingProgressModalBookId(userBook.book_id);
-            }}
-          >
-            <BookCover bookId={userBook.book_id} preview={false} />
-            {currentProgresses[userBook.book_id] &&
-              currentProgresses[userBook.book_id].percentage && (
-                <Progress
-                  type="circle"
-                  percent={currentProgresses[userBook.book_id].percentage}
-                  className={styles["progress-indicator"]}
-                  size={30}
-                  strokeWidth={20}
-                  showInfo={false}
-                />
-              )}
-          </li>
-        ))}
+                setUpdateProgressModalOpen(true);
+                setUpdateReadingProgressModalBookId(userBook.book_id);
+              }}
+            >
+              <BookCover bookId={userBook.book_id} preview={false} />
+              {currentProgresses[userBook.book_id] &&
+                currentProgresses[userBook.book_id].percentage && (
+                  <Progress
+                    type="circle"
+                    percent={currentProgresses[userBook.book_id].percentage}
+                    className={styles["progress-indicator"]}
+                    size={30}
+                    strokeWidth={20}
+                    showInfo={false}
+                  />
+                )}
+            </li>
+          ))}
       </ul>
     </section>
   );

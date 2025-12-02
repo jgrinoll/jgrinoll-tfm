@@ -41,7 +41,7 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
       style={{
         position: "sticky",
         top: 0,
-        zIndex: 1,
+        zIndex: 900,
         width: "100%",
       }}
     >

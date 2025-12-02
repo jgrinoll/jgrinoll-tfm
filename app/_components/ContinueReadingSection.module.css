@@ -3,6 +3,7 @@
   padding: 5;
   white-space: nowrap;
   overflow-x: auto;
+  padding-bottom: 0.75rem;
 }
 
 .continue-reading-list li {

@@ -150,11 +150,11 @@ const insertBook = async (book: GoogleBook, connection?: Connection) => {
   const values = [
     book.id,
     book.volumeInfo.title,
-    book.volumeInfo.authors?.join(", "),
-    thumbnail,
-    book.volumeInfo.pageCount,
-    book.volumeInfo.categories?.join(";"),
-    book.volumeInfo.description,
+    book.volumeInfo.authors?.join(", ") ?? "Desconegut",
+    thumbnail ?? null,
+    book.volumeInfo.pageCount ?? null,
+    book.volumeInfo.categories?.join(";") ?? null,
+    book.volumeInfo.description ?? null,
   ];
 
   await dbConnection.execute<ResultSetHeader>(sql, values);
