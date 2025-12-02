@@ -78,7 +78,7 @@ export async function POST(
       // TODO - Crear mètodes auxiliars per les queries més comuns per reduir el codi duplicat.
       const sql =
         "UPDATE reading_progress SET pages_read = ?, percentage = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
-      const values = [pageCount, percentage, rowId];
+      const values = [pageCount, percentage ?? null, rowId];
       const [updateResult] = await dbConnection.execute<ResultSetHeader>(
         sql,
         values
@@ -89,7 +89,7 @@ export async function POST(
       // Insert a new progress update
       const sql =
         "INSERT INTO reading_progress (user_id, book_id, pages_read, percentage) VALUES (?,?,?,?)";
-      const values = [userId, bookId, pageCount, percentage];
+      const values = [userId, bookId, pageCount, percentage ?? null];
       const [insertResult] = await dbConnection.execute<ResultSetHeader>(
         sql,
         values

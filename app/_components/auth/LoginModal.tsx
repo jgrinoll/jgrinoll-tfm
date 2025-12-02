@@ -60,7 +60,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
   return (
     <>
-      <Modal {...props} footer={null}>
+      <Modal {...props} title="Iniciar Sessió" footer={null}>
         <Form
           name="login-form"
           labelCol={{ span: 7 }}

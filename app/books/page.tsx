@@ -25,7 +25,7 @@ const Page = async ({
   return (
     <>
       <Paragraph>
-        <b>Mostrant resultats per</b> "{query}"
+        <b>Mostrant resultats per</b> &quot;{query}&quot;
       </Paragraph>
       {/* TODO - Add filter button */}
       <Suspense fallback={<Spin />}>

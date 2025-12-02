@@ -3,7 +3,7 @@ import ContinueReadingSection from "./_components/ContinueReadingSection";
 import SuggestRegistrationSection from "./_components/SuggestRegistrationSection";
 
 export default async function Page() {
-  // Hydrate all client components with data from the server
+  // Server-side component.
 
   return (
     <>

@@ -68,5 +68,10 @@ export const appTheme: ThemeConfig = {
       fontSizeHeading2: 18,
       titleMarginBottom: 0,
     },
+    Progress: {
+      defaultColor: "#e66d57",
+      remainingColor: "#f2b5aa99",
+      colorBgContainer: "#fff",
+    },
   },
 };

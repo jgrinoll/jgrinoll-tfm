@@ -1,18 +1,41 @@
-import { ImageLinks } from "@/app/_lib/models/GoogleBook";
+import { GoogleBook, ImageLinks } from "@/app/_lib/models/GoogleBook";
 import { Image, message } from "antd";
 import SkeletonImage from "antd/es/skeleton/Image";
 import React, { useEffect, useState } from "react";
 
 interface BookCoverProps {
-  imageLinks: ImageLinks;
+  imageLinks?: ImageLinks;
+  bookId?: string;
   size?: "default" | "largest";
+  preview?: boolean
 }
 const BookCover: React.FC<BookCoverProps> = ({
-  imageLinks,
+  imageLinks: imageLinksProp,
   size = "default",
+  bookId,
+  preview = true
 }) => {
   const [loading, setLoading] = useState(size === "largest");
+  const [imageLinks, setImageLinks] = useState(imageLinksProp);
   const [src, setSrc] = useState<string | null>(imageLinks?.thumbnail ?? null); // We first load the thumbnail size image for a faster first load.
+
+  useEffect(() => {
+    const fetchGoogleBook = async () => {
+      const response = await fetch(`api/google_books/${bookId}`);
+
+      if (!response.ok) {
+        message.error(`Error obtenint els detalls del llibre ${bookId}`);
+      }
+
+      const googleBook: GoogleBook = await response.json();
+      setImageLinks(googleBook.volumeInfo.imageLinks);
+      setSrc(googleBook.volumeInfo.imageLinks?.thumbnail ?? null);
+    };
+
+    if (bookId) {
+      fetchGoogleBook();
+    }
+  }, [bookId, setImageLinks]);
 
   useEffect(() => {
     const getAvailableLargestSize = async () => {
@@ -61,6 +84,7 @@ const BookCover: React.FC<BookCoverProps> = ({
             maxHeight: "500px",
           }}
           alt="Book cover"
+          preview={preview}
         />
       )}
     </>

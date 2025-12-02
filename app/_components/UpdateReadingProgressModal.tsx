@@ -17,9 +17,8 @@ import {
   updateReadingProgressModalOpen,
 } from "../_lib/jotai/atoms";
 import Book from "../_lib/models/Book";
-import { GoogleBook } from "../_lib/models/GoogleBook";
-import { UserBook } from "../_lib/models/UserBook";
 import { ReadingProgress } from "../_lib/models/ReadingProgress";
+import { UserBook } from "../_lib/models/UserBook";
 
 type FieldType = {
   pageCount: number;
@@ -38,8 +37,22 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
   >();
   const [form] = useForm();
 
+  console.log(
+    `(UpdateReadingProgressModal) My state is open: ${open} | book: ${bookId}`
+  );
+
+  useEffect(() => {
+    form.resetFields(); // Update the default values
+  }, [book, userBook, currentProgress, form]);
+
   useEffect(() => {
     const getBookInfo = async () => {
+      // Reset state when changing book
+      setBook(undefined);
+      setUserBook(undefined);
+      setCurrentProgress(undefined);
+      form.resetFields();
+
       // TODO - Canviar això i gestionar-ho des de jotai perquè es quedi el component en suspense
       if (!bookId) {
         setOpen(false);
@@ -63,11 +76,15 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
         userBookResponse.json(),
         readingProgressResponse.json(),
       ]);
+      console.log("Got the book ", book);
+
       setBook(book);
       setUserBook(userBook);
-      setCurrentProgress(readingProgress);
+      if (readingProgressResponse.ok) setCurrentProgress(readingProgress);
       setLoading(false);
     };
+
+    console.log("Triggering getBookInfo");
 
     getBookInfo();
   }, [bookId, setOpen]);
@@ -123,6 +140,8 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
   };
 
   const onChangePageCount = (pageCount: number | null) => {
+    console.log("onChangePageCount", pageCount);
+
     if (!pageCount || !book?.page_count) {
       form.setFieldValue("percentage", null);
       return;
@@ -136,6 +155,8 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
   if (!book) {
     return <></>;
   }
+
+  console.log("Book page count is ", book.page_count);
 
   // TODO - El llibre pot no tenir total de pàgines. Cal modificar aquest component perquè funcioni correctament si és el cas.
   // TODO - Mostrar el progrés actual de l'usuari
@@ -195,38 +216,44 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
               ]}
             >
               <InputNumber
-                max={book?.page_count}
+                max={book?.page_count !== 0 ? book.page_count : undefined}
                 min={0}
-                suffix={`/ ${book?.page_count} pàgines`}
+                suffix={
+                  !!book.page_count
+                    ? `/ ${book?.page_count} pàgines`
+                    : `pàgines`
+                }
                 onChange={onChangePageCount}
               />
             </Form.Item>
-            <Form.Item<FieldType>
-              label="Percentatge de progrés"
-              name="percentage"
-              rules={[
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value && !getFieldValue("pageCount")) {
-                      return Promise.reject(
-                        new Error(
-                          "Has d'especificar el nombre de pàgines o el percentatge!"
-                        )
-                      );
-                    } else {
-                      return Promise.resolve();
-                    }
-                  },
-                }),
-              ]}
-            >
-              <InputNumber
-                max={100}
-                min={0}
-                suffix="%"
-                onChange={onChangePercentage}
-              />
-            </Form.Item>
+            {!!book.page_count && (
+              <Form.Item<FieldType>
+                label="Percentatge de progrés"
+                name="percentage"
+                rules={[
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value && !getFieldValue("pageCount")) {
+                        return Promise.reject(
+                          new Error(
+                            "Has d'especificar el nombre de pàgines o el percentatge!"
+                          )
+                        );
+                      } else {
+                        return Promise.resolve();
+                      }
+                    },
+                  }),
+                ]}
+              >
+                <InputNumber
+                  max={100}
+                  min={0}
+                  suffix="%"
+                  onChange={onChangePercentage}
+                />
+              </Form.Item>
+            )}
             <p style={{ textAlign: "right" }}>
               <a href="#" onClick={onBookFinish}>
                 Has acabat el llibre?
