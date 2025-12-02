@@ -1,0 +1,36 @@
+.lists-tab-list {
+  list-style-type: none;
+  padding: 5;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.lists-tab-list li {
+  position: relative;
+  height: 240px;
+  max-width: 30%;
+  margin: 0.5rem;
+}
+
+.lists-tab-list li > a {
+  display: block;
+  height: 100%;
+}
+
+@media (min-width: 481px) {
+  .lists-tab-list li {
+    height: 300px;
+  }
+}
+
+@media (min-width: 769px) {
+  .lists-tab-list li {
+    height: 350px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lists-tab-list li {
+    height: 400px;
+  }
+}

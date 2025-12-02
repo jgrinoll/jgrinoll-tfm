@@ -4,7 +4,7 @@ import Link from "next/link";
 import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
 import { getShortTitle } from "@/app/_lib/utils/book_utils";
-import RelatedBookCard from "@/app/_components/RelatedBookCard";
+import MiniBookCard from "@/app/_components/MiniBookCard";
 import styles from "./RelatedBookList.module.css";
 import { getRelatedBooks } from "@/app/books/_utils/api_utils";
 
@@ -31,7 +31,7 @@ const RelatedBookList: React.FC<RelatedBookListProps> = async ({ book }) => {
           return (
             <li key={relatedBook.id}>
               <Link href={`/books/${relatedBook.id}`}>
-                <RelatedBookCard thumbnail={thumbnail} title={shortTitle} />
+                <MiniBookCard thumbnail={thumbnail} title={shortTitle} />
               </Link>
             </li>
           );

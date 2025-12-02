@@ -59,12 +59,11 @@ export const appTheme: ThemeConfig = {
       headerBg: "#fbf7ef",
       headerPadding: 10,
       bodyBg: "#fcf1f4",
-      /* bodyBg: "#fbf7ef", */
       footerBg: "#fbf7ef",
       footerPadding: 0,
     },
     Typography: {
-      fontSizeHeading1: 22,
+      fontSizeHeading1: 26,
       fontSizeHeading2: 18,
       titleMarginBottom: 0,
     },

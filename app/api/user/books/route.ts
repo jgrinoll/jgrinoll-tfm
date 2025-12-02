@@ -20,13 +20,17 @@ export async function GET(req: Request) {
     // Get the data from DB
     dbConnection = await dbConnectionPool.getConnection();
 
+    console.log(`Trying to find user ${userId} books`);
+
     let sql = "SELECT * FROM user_books WHERE user_id = ?";
     const values: (string | number)[] = [userId];
     if (status) {
+      console.log(`Trying to find user ${userId} books from list ${status}`);
       sql += " AND status = ?";
       values.push(status);
     }
     const [results] = await dbConnection.execute(sql, values);
+    console.log("Query results are: ", results);
     return NextResponse.json(results as UserBook[]);
   } catch (err) {
     console.error(err);

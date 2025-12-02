@@ -5,6 +5,7 @@ import { useState } from "react";
 import LoginModal from "../auth/LoginModal";
 import RegisterModal from "../auth/RegisterModal";
 import { userDataAtom } from "@/app/_lib/jotai/atoms";
+import Link from "next/link";
 
 const SessionButton = () => {
   const [userData, setUserData] = useAtom(userDataAtom);
@@ -16,20 +17,13 @@ const SessionButton = () => {
     setLoginModalOpen(false);
   };
 
-  const logout = async () => {
-    setUserData(null);
-
-    await fetch("/api/auth", {
-      method: "DELETE",
-    });
-  };
-
   return userData ? (
-    <Avatar
-      src={userData.avatar_url}
-      icon={<UserOutlined />}
-      onClick={logout}
-    />
+    <Link href={"/profile/"}>
+      <Avatar
+        src={userData.avatar_url}
+        icon={<UserOutlined />}
+      />
+    </Link>
   ) : (
     <>
       <LoginModal
