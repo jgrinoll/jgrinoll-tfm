@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 import "server-only";
 
 export async function POST(req: Request) {
+  let db;
   try {
     const { email, plainPassword } = await req.json();
 
@@ -14,7 +15,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid fields" }, { status: 400 });
     }
 
-    const db = dbConnectionPool;
+    db = await dbConnectionPool.getConnection();
 
     const [rows] = await db.execute<RowDataPacket[]>(
       "SELECT id, username, password, avatar_url, level, total_pages_read FROM users WHERE email = ?",
@@ -61,6 +62,8 @@ export async function POST(req: Request) {
       { error: "Internal server error" },
       { status: 500 }
     );
+  } finally {
+    if (db) db.release();
   }
 }
 

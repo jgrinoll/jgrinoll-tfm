@@ -9,26 +9,31 @@ export async function GET(
   req: Request,
   context: { params: Promise<{ id: string }> }
 ) {
-  const sessioninfo = await getSessionInfo();
-  if (!sessioninfo) return NextResponse.json({ ok: false }, { status: 401 });
+  let dbConnection;
+  try {
+    const sessioninfo = await getSessionInfo();
+    if (!sessioninfo) return NextResponse.json({ ok: false }, { status: 401 });
 
-  const { id: bookId } = await context.params;
+    const { id: bookId } = await context.params;
 
-  const userId = sessioninfo.id;
-  const dbConnection = dbConnectionPool;
+    const userId = sessioninfo.id;
+    dbConnection = await dbConnectionPool.getConnection();
 
-  const sql = "SELECT * FROM user_books WHERE user_id = ? AND book_id = ?";
-  const [results] = await dbConnection.execute<UserBookRowDataPacket[]>(sql, [
-    userId,
-    bookId,
-  ]);
+    const sql = "SELECT * FROM user_books WHERE user_id = ? AND book_id = ?";
+    const [results] = await dbConnection.execute<UserBookRowDataPacket[]>(sql, [
+      userId,
+      bookId,
+    ]);
 
-  if (results.length === 0) {
-    return NextResponse.json(
-      { ok: false, error: "User book not found" },
-      { status: 404 }
-    );
+    if (results.length === 0) {
+      return NextResponse.json(
+        { ok: false, error: "User book not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(results[0] as UserBook);
+  } finally {
+    if (dbConnection) dbConnection.release();
   }
-
-  return NextResponse.json(results[0] as UserBook);
 }

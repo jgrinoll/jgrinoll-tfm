@@ -1,5 +1,6 @@
 import CategoriesSection from "./_components/CategoriesSection";
 import ContinueReadingSection from "./_components/ContinueReadingSection";
+import FeaturedBookSection from "./_components/FeaturedBookSection";
 import SuggestRegistrationSection from "./_components/SuggestRegistrationSection";
 
 export default async function Page() {
@@ -10,7 +11,7 @@ export default async function Page() {
       <ContinueReadingSection />
       <SuggestRegistrationSection />
       <CategoriesSection />
-      {/* <FeaturedBookSection /> */}
+      <FeaturedBookSection bookId="8w-YCgAAQBAJ" />
     </>
   );
 }

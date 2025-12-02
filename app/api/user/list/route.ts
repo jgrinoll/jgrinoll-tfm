@@ -10,6 +10,7 @@ interface AddToListProps {
   bookId: string;
 }
 export async function POST(req: Request) {
+  let dbConnection;
   try {
     const sessioninfo = await getSessionInfo();
     if (!sessioninfo) return NextResponse.json({ ok: false }, { status: 401 });
@@ -24,7 +25,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const dbConnection = dbConnectionPool;
+    dbConnection = await dbConnectionPool.getConnection();
 
     // Duplicate user book check
     const [existing] = await dbConnection.execute<RowDataPacket[]>(
@@ -55,5 +56,7 @@ export async function POST(req: Request) {
       { error: "Internal server error" },
       { status: 500 }
     );
+  } finally {
+    if (dbConnection) dbConnection.release();
   }
 }

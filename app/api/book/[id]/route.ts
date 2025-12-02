@@ -9,19 +9,32 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id: bookId } = await params;
-  const dbConnection = dbConnectionPool;
+  const book = await getBook(bookId);
 
-  const sql = "SELECT * FROM books WHERE id = ?";
-  const [results] = await dbConnection.execute<BookRowDataPacket[]>(sql, [
-    bookId,
-  ]);
-
-  if (results.length === 0) {
+  if (!book) {
     return NextResponse.json(
       { ok: false, error: "Book not found" },
       { status: 404 }
     );
   }
 
-  return NextResponse.json(results[0] as Book);
+  return NextResponse.json(book);
+}
+
+// TODO - Move this to a data access layer
+export async function getBook(bookId: string): Promise<Book | null> {
+  let dbConnection;
+  try {
+    dbConnection = await dbConnectionPool.getConnection();
+
+    const sql = "SELECT * FROM books WHERE id = ?";
+    const [results] = await dbConnection.execute<BookRowDataPacket[]>(sql, [
+      bookId,
+    ]);
+
+    if (results.length === 0) return null;
+    return results[0] as Book;
+  } finally {
+    if (dbConnection) dbConnection.release();
+  }
 }

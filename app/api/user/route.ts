@@ -18,6 +18,7 @@ type MySQLError = {
 };
 
 export async function POST(req: Request) {
+  let dbConnection;
   try {
     const user: RegisterUserDTO = await req.json();
 
@@ -28,7 +29,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const dbConnection = dbConnectionPool;
+    dbConnection = await dbConnectionPool.getConnection();
 
     // Duplicate email check
     const [existing] = await dbConnection.execute<RowDataPacket[]>(
@@ -60,6 +61,8 @@ export async function POST(req: Request) {
       { error: "Internal server error" },
       { status: 500 }
     );
+  } finally {
+    if (dbConnection) dbConnection.release();
   }
 }
 

@@ -10,6 +10,7 @@ export async function POST(
   req: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  let dbConnection;
   try {
     const { review }: FinishBookRequestBody = await req.json();
 
@@ -23,7 +24,7 @@ export async function POST(
 
     // Check if a row already exists
     // TODO - Use the pool.getConnection() everywhere...
-    const dbConnection = await dbConnectionPool.getConnection();
+    dbConnection = await dbConnectionPool.getConnection();
     await dbConnection.beginTransaction();
 
     try {
@@ -67,6 +68,8 @@ export async function POST(
       { error: "Internal server error" },
       { status: 500 }
     );
+  } finally {
+    if (dbConnection) dbConnection.release();
   }
 }
 

@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import "server-only";
 
 export async function GET(req: Request) {
+  let dbConnection;
   try {
     // Get search parameters
     const url = new URL(req.url);
@@ -17,7 +18,7 @@ export async function GET(req: Request) {
     const { id: userId } = sessionInfo;
 
     // Get the data from DB
-    const dbConnection = await dbConnectionPool.getConnection();
+    dbConnection = await dbConnectionPool.getConnection();
 
     let sql = "SELECT * FROM user_books WHERE user_id = ?";
     const values: (string | number)[] = [userId];
@@ -33,6 +34,8 @@ export async function GET(req: Request) {
       { error: "Internal server error" },
       { status: 500 }
     );
+  } finally {
+    if (dbConnection) dbConnection.release();
   }
 }
 

@@ -1,4 +1,3 @@
-import mysql from "mysql2";
 import { ConnectionOptions } from "mysql2";
 
 const GetDBSettings = (): ConnectionOptions => {
@@ -13,9 +12,12 @@ const GetDBSettings = (): ConnectionOptions => {
         user: process.env.MYSQL_USER!,
         password: process.env.MYSQL_PASSWORD!,
         database: process.env.MYSQL_DATABASE!,
+        connectionLimit: 30,
+        maxIdle: 5,
+        idleTimeout: 60000,
+        enableKeepAlive: true,
         waitForConnections: true,
-        connectionLimit: 10,
-        queueLimit: 0,
+        queueLimit: 10,
       };
   }
 };

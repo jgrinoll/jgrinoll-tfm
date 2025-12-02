@@ -5,7 +5,7 @@ import {
   ImageLinks,
 } from "@/app/_lib/models/GoogleBook";
 import { ResultSetHeader } from "mysql2";
-import { RowDataPacket } from "mysql2/promise";
+import { Connection, RowDataPacket } from "mysql2/promise";
 
 export const searchBooks = async (
   query: string
@@ -82,24 +82,28 @@ const cacheBooksInDatabase = async (books: GoogleBook[]) => {
   const bookIds = books.map((book) => book.id);
   const sql = "SELECT id FROM books WHERE id NOT IN (?)";
 
-  const dbConnection = dbConnectionPool;
-  const [existingRows] = await dbConnection.execute<RowDataPacket[]>(sql, [
-    bookIds,
-  ]);
+  const dbConnection = await dbConnectionPool.getConnection();
+  try {
+    const [existingRows] = await dbConnection.execute<RowDataPacket[]>(sql, [
+      bookIds,
+    ]);
 
-  const booksToInsert: GoogleBook[] = [];
-  books.forEach((book) => {
-    if (existingRows.findIndex((row) => row.id === book.id) === -1)
-      booksToInsert.push(book);
-  });
+    const booksToInsert: GoogleBook[] = [];
+    books.forEach((book) => {
+      if (existingRows.findIndex((row) => row.id === book.id) === -1)
+        booksToInsert.push(book);
+    });
 
-  for (const book of booksToInsert) {
-    await insertBook(book);
+    for (const book of booksToInsert) {
+      await insertBook(book);
+    }
+  } finally {
+    dbConnection.release();
   }
 };
 
-const insertBook = async (book: GoogleBook) => {
-  const dbConnection = dbConnectionPool;
+const insertBook = async (book: GoogleBook, connection?: Connection) => {
+  const dbConnection = connection ?? (await dbConnectionPool.getConnection());
 
   const sql =
     "INSERT INTO books (id, title, authors, thumbnail, page_count, categories, description) VALUES (?,?,?,?,?,?,?)";

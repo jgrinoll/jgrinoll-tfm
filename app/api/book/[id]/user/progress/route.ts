@@ -9,29 +9,34 @@ export async function GET(
   req: Request,
   context: { params: Promise<{ id: string }> }
 ) {
-  const sessioninfo = await getSessionInfo();
-  if (!sessioninfo) return NextResponse.json({ ok: false }, { status: 401 });
+  let dbConnection;
+  try {
+    const sessioninfo = await getSessionInfo();
+    if (!sessioninfo) return NextResponse.json({ ok: false }, { status: 401 });
 
-  const { id: bookId } = await context.params;
+    const { id: bookId } = await context.params;
 
-  const userId = sessioninfo.id;
-  const dbConnection = dbConnectionPool;
+    const userId = sessioninfo.id;
+    dbConnection = await dbConnectionPool.getConnection();
 
-  const sql =
-    "SELECT * FROM reading_progress WHERE user_id = ? AND book_id = ?";
-  const [results] = await dbConnection.execute<ReadingProgressRowDataPacket[]>(
-    sql,
-    [userId, bookId]
-  );
-
-  if (results.length === 0) {
-    return NextResponse.json(
-      { ok: false, error: "Reading progress not found" },
-      { status: 404 }
+    const sql =
+      "SELECT * FROM reading_progress WHERE user_id = ? AND book_id = ?";
+    const [results] = await dbConnection.execute<ReadingProgressRowDataPacket[]>(
+      sql,
+      [userId, bookId]
     );
-  }
 
-  return NextResponse.json(results[0] as ReadingProgress);
+    if (results.length === 0) {
+      return NextResponse.json(
+        { ok: false, error: "Reading progress not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(results[0] as ReadingProgress);
+  } finally {
+    if (dbConnection) dbConnection.release();
+  }
 }
 
 interface UpdateProgressRequestBody {
@@ -42,6 +47,7 @@ export async function POST(
   req: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  let dbConnection;
   try {
     const { pageCount, percentage }: UpdateProgressRequestBody =
       await req.json();
@@ -66,7 +72,7 @@ export async function POST(
     const { id: bookId } = await context.params;
 
     // Check if a row already exists
-    const dbConnection = dbConnectionPool;
+    dbConnection = await dbConnectionPool.getConnection();
 
     const [existing] = await dbConnection.execute<RowDataPacket[]>(
       "SELECT id FROM reading_progress WHERE user_id = ? AND book_id = ?",
@@ -106,5 +112,7 @@ export async function POST(
       { error: "Internal server error" },
       { status: 500 }
     );
+  } finally {
+    if (dbConnection) dbConnection.release();
   }
 }
