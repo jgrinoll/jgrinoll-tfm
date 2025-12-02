@@ -1,23 +1,28 @@
+"use client";
 import { GoogleBook, ImageLinks } from "@/app/_lib/models/GoogleBook";
 import { Image, message } from "antd";
 import SkeletonImage from "antd/es/skeleton/Image";
 import React, { useEffect, useState } from "react";
 
 interface BookCoverProps {
+  src?: string;
   imageLinks?: ImageLinks;
   bookId?: string;
   size?: "default" | "largest";
-  preview?: boolean
+  preview?: boolean;
 }
 const BookCover: React.FC<BookCoverProps> = ({
   imageLinks: imageLinksProp,
   size = "default",
   bookId,
-  preview = true
+  preview = true,
+  src: srcProp,
 }) => {
   const [loading, setLoading] = useState(size === "largest");
   const [imageLinks, setImageLinks] = useState(imageLinksProp);
-  const [src, setSrc] = useState<string | null>(imageLinks?.thumbnail ?? null); // We first load the thumbnail size image for a faster first load.
+  const [src, setSrc] = useState<string | null>(
+    srcProp ?? imageLinks?.thumbnail ?? null
+  ); // We first load the thumbnail size image for a faster first load.
 
   useEffect(() => {
     const fetchGoogleBook = async () => {
@@ -29,13 +34,13 @@ const BookCover: React.FC<BookCoverProps> = ({
 
       const googleBook: GoogleBook = await response.json();
       setImageLinks(googleBook.volumeInfo.imageLinks);
-      setSrc(googleBook.volumeInfo.imageLinks?.thumbnail ?? null);
+      setSrc(srcProp ?? googleBook.volumeInfo.imageLinks?.thumbnail ?? null);
     };
 
     if (bookId) {
       fetchGoogleBook();
     }
-  }, [bookId, setImageLinks]);
+  }, [bookId, setImageLinks, srcProp]);
 
   useEffect(() => {
     const getAvailableLargestSize = async () => {
@@ -66,7 +71,7 @@ const BookCover: React.FC<BookCoverProps> = ({
     }
   }, [imageLinks, size]);
 
-  if (!imageLinks) {
+  if (!src) {
     return null;
   }
 
@@ -74,17 +79,30 @@ const BookCover: React.FC<BookCoverProps> = ({
   return (
     <>
       {loading && <SkeletonImage active={loading} />}
-      {!loading && (
+      {!loading && preview && (
         <Image
           src={src ?? undefined}
           style={{
             borderTopRightRadius: "1rem",
             borderBottomRightRadius: "1rem",
             padding: 5,
-            maxHeight: "500px",
+            height: "100%", // Take parent size
+            width: "100%"
           }}
           alt="Book cover"
           preview={preview}
+        />
+      )}{!loading && !preview && (
+        <img
+          src={src ?? undefined}
+          style={{
+            borderTopRightRadius: "1rem",
+            borderBottomRightRadius: "1rem",
+            padding: 5,
+            height: "100%", // Take parent size
+            width: "100%"
+          }}
+          alt="Book cover"
         />
       )}
     </>

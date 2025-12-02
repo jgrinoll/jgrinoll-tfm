@@ -1,4 +1,4 @@
-import Link from "next/link";
+import CategoriesSection from "./_components/CategoriesSection";
 import ContinueReadingSection from "./_components/ContinueReadingSection";
 import SuggestRegistrationSection from "./_components/SuggestRegistrationSection";
 
@@ -9,6 +9,8 @@ export default async function Page() {
     <>
       <ContinueReadingSection />
       <SuggestRegistrationSection />
+      <CategoriesSection />
+      {/* <FeaturedBookSection /> */}
     </>
   );
 }

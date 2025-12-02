@@ -11,6 +11,7 @@ const Page = async ({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) => {
+  // TODO - Support a "subject" searchParam with the category.
   let books: GoogleBook[] = [];
   let query = "";
 

@@ -1,0 +1,12 @@
+.categories-list {
+  list-style-type: none;
+  padding: 5;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.categories-list li {
+  position: relative;
+  display: inline-block;
+  margin-right: 0.75rem;
+}
