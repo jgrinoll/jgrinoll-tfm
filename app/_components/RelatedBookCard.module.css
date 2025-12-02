@@ -1,0 +1,28 @@
+.imageContainer {
+  width: 120px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 481px) {
+  .imageContainer {
+    width: 150px;
+    height: 200px;
+  }
+}
+
+@media (min-width: 769px) {
+  .imageContainer {
+    width: 180px;
+    height: 240px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .imageContainer {
+    width: 200px;
+    height: 280px;
+  }
+}

@@ -45,6 +45,41 @@ export const getBookDetails = async (bookId: string): Promise<GoogleBook> => {
   return book;
 };
 
+export const getRelatedBooks = async (book: GoogleBook): Promise<GoogleBook[]> => {
+  const relatedBooks: GoogleBook[] = [];
+  const seenIds = new Set<string>([book.id]);
+
+  if (book.volumeInfo.authors && book.volumeInfo.authors.length > 0) {
+    const author = book.volumeInfo.authors[0];
+    const authorResults: GoogleBooksSearchResponse = await searchBooks(`inauthor:${author}`);
+    
+    if (authorResults.items) {
+      authorResults.items.forEach(item => {
+        if (!seenIds.has(item.id)) {
+          relatedBooks.push(item);
+          seenIds.add(item.id);
+        }
+      });
+    }
+  }
+
+  if (relatedBooks.length < 10 && book.volumeInfo.categories && book.volumeInfo.categories.length > 0) {
+    const category = book.volumeInfo.categories[0];
+    const categoryResults: GoogleBooksSearchResponse = await searchBooks(`subject:${category}`);
+    
+    if (categoryResults.items) {
+      categoryResults.items.forEach(item => {
+        if (!seenIds.has(item.id) && relatedBooks.length < 20) {
+          relatedBooks.push(item);
+          seenIds.add(item.id);
+        }
+      });
+    }
+  }
+
+  return relatedBooks.slice(0, 10);
+};
+
 export const getLargestAvailableThumbnail = async (
   imageLinks: ImageLinks
 ): Promise<string> => {

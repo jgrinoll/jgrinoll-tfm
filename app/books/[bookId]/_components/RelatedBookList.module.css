@@ -1,0 +1,37 @@
+.related-books-list {
+  list-style-type: none;
+  padding: 5;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.related-books-list li {
+  position: relative;
+  display: inline-block;
+  margin-right: 0.75rem;
+  vertical-align: top;
+  height: 240px;
+}
+
+.related-books-list li > a {
+  display: block;
+  height: 100%;
+}
+
+@media (min-width: 481px) {
+  .related-books-list li {
+    height: 300px;
+  }
+}
+
+@media (min-width: 769px) {
+  .related-books-list li {
+    height: 350px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .related-books-list li {
+    height: 400px;
+  }
+}

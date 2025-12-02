@@ -1,5 +1,3 @@
-"use client";
-
 import { GoogleBook } from "@/app/_lib/models/GoogleBook";
 import { Col, Flex, Row, Space } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";

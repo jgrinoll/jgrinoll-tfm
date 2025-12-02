@@ -99,8 +99,9 @@ const BookCover: React.FC<BookCoverProps> = ({
             borderTopRightRadius: "1rem",
             borderBottomRightRadius: "1rem",
             padding: 5,
-            height: "100%", // Take parent size
-            width: "100%"
+            height: "100%",
+            width: "100%",
+            objectFit: "contain"
           }}
           alt="Book cover"
         />
