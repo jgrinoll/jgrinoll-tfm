@@ -15,10 +15,10 @@ export default function SuggestRegistrationSection() {
 
   return (
     <section>
-      <Title level={1}>Registra't per fer el teu seguiment</Title>
+      <Title level={1}>Registra&apos;t per fer el teu seguiment</Title>
       <Paragraph>
         Descobreix una manera senzilla i organitzada de gestionar els teus
-        llibres. Registra't ara i transforma la teva experiència lectora en un
+        llibres. Registra&apos;t ara i transforma la teva experiència lectora en un
         viatge completament teu.
         <br />
         <br />

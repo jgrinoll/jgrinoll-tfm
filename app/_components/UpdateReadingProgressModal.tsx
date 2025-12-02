@@ -10,9 +10,11 @@ import {
   ModalProps,
 } from "antd";
 import { useForm } from "antd/es/form/Form";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import {
+  bookReviewModalBookId,
+  bookReviewModalOpen,
   updateReadingProgressModalBookId,
   updateReadingProgressModalOpen,
 } from "../_lib/jotai/atoms";
@@ -28,7 +30,9 @@ type FieldType = {
 // Add option to pass the book directly instead of bookid
 const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
   const [open, setOpen] = useAtom(updateReadingProgressModalOpen);
-  const [bookId, setBookId] = useAtom(updateReadingProgressModalBookId);
+  const bookId = useAtomValue(updateReadingProgressModalBookId);
+  const setReviewModalOpen = useSetAtom(bookReviewModalOpen);
+  const setReviewModalBookId = useSetAtom(bookReviewModalBookId);
   const [loading, setLoading] = useState(false);
   const [book, setBook] = useState<Book | undefined>();
   const [userBook, setUserBook] = useState<UserBook | undefined>();
@@ -107,7 +111,6 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
     setLoading(false);
   };
 
-  // TODO - This will open the review modal when implemented.
   const onBookFinish = async () => {
     setLoading(true);
 
@@ -119,6 +122,8 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
     if (response.ok) {
       message.success(`Has acabat de llegir ${book?.title}!`);
       setOpen(false);
+      setReviewModalBookId(bookId);
+      setReviewModalOpen(true);
     } else {
       message.error("Hi ha hagut un error marcant el llibre com a llegit.");
     }
