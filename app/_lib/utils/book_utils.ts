@@ -1,4 +1,5 @@
 export function getShortTitle(title: string) {
+  if (!title) return "";
   const verticalLineSeparatorIndex = title.indexOf("|");
   const parenthesisSeparatorIndex = title.indexOf("(");
   let separatorIndex = -1;
