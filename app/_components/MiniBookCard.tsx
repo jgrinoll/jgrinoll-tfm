@@ -11,16 +11,7 @@ interface RelatedBookCardProps {
 
 const MiniBookCard: React.FC<RelatedBookCardProps> = ({ thumbnail, title }) => {
   return (
-    <Card
-      style={{
-        backgroundColor: "#fbcfe8",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <>
       <div className={styles.imageContainer}>
         {thumbnail && <BookCover preview={false} src={thumbnail} />}
       </div>
@@ -36,7 +27,8 @@ const MiniBookCard: React.FC<RelatedBookCardProps> = ({ thumbnail, title }) => {
       >
         {getShortTitle(title)}
       </Paragraph>
-    </Card>
+    </>
+    /* </Card> */
   );
 };
 

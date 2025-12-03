@@ -1,16 +1,8 @@
 .related-books-list {
   list-style-type: none;
   padding: 5;
-  white-space: nowrap;
+  display: flex;
   overflow-x: auto;
-}
-
-.related-books-list li {
-  position: relative;
-  display: inline-block;
-  margin-right: 0.75rem;
-  vertical-align: top;
-  height: 240px;
 }
 
 .related-books-list li > a {
