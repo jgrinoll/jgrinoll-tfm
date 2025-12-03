@@ -1,5 +1,5 @@
-import LoginUserDTO from "@/app/lib/models/LoginUserDTO";
-import RegisterUserDTO from "@/app/lib/models/RegisterUserDTO";
+import LoginUserDTO from "../models/LoginUserDTO";
+import RegisterUserDTO from "../models/RegisterUserDTO";
 
 export const validateEmail = (email: string) =>
   !!email &&
