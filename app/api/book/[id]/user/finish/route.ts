@@ -2,6 +2,7 @@ import { getSessionInfo } from "@/app/_lib/auth_utils";
 import dbConnectionPool from "@/app/_lib/db/db";
 import { Connection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { NextResponse } from "next/server";
+import { updateUserPagesAndLevel } from "@/app/_actions/user_actions";
 
 interface FinishBookRequestBody {
   review?: unknown;
@@ -28,7 +29,42 @@ export async function POST(
     await dbConnection.beginTransaction();
 
     try {
-      // Update book status in user_books
+      const [bookResults] = await dbConnection.execute<RowDataPacket[]>(
+        "SELECT page_count FROM books WHERE id = ?",
+        [bookId]
+      );
+
+      const bookPageCount = bookResults.length > 0 ? (bookResults[0].page_count as number) || 0 : 0;
+
+      const [progressResults] = await dbConnection.execute<RowDataPacket[]>(
+        "SELECT pages_read FROM reading_progress WHERE user_id = ? AND book_id = ?",
+        [userId, bookId]
+      );
+
+      const currentPagesRead = progressResults.length > 0 ? (progressResults[0].pages_read as number) || 0 : 0;
+
+      const remainingPages = Math.max(0, bookPageCount - currentPagesRead);
+      let levelUpData = null;
+
+      if (remainingPages > 0) {
+        const levelResult = await updateUserPagesAndLevel(
+          userId,
+          remainingPages,
+          dbConnection
+        );
+
+        if (levelResult?.leveledUp) {
+          console.log(
+            `User ${userId} leveled up from ${levelResult.oldLevel} to ${levelResult.newLevel}!`
+          );
+          levelUpData = {
+            leveledUp: true,
+            oldLevel: levelResult.oldLevel,
+            newLevel: levelResult.newLevel,
+          };
+        }
+      }
+
       let [existing] = await dbConnection.execute<RowDataPacket[]>(
         "SELECT id FROM user_books WHERE user_id = ? AND book_id = ?",
         [userId, bookId]
@@ -37,11 +73,9 @@ export async function POST(
         const rowId = existing[0].id;
         await updateUserBooks(rowId, dbConnection);
       } else {
-        // Insert a new progress update
         await insertUserBooks(userId, bookId, dbConnection);
       }
 
-      // Delete reading_progress if it exists
       [existing] = await dbConnection.execute<RowDataPacket[]>(
         "SELECT id FROM reading_progress WHERE user_id = ? AND book_id = ?",
         [userId, bookId]
@@ -51,14 +85,13 @@ export async function POST(
         await deleteReadingProgress(rowId, dbConnection);
       }
 
-      // TODO - Insert review
       if (review) {
         console.log("Reviews not implemented");
       }
 
-      dbConnection.commit();
+      await dbConnection.commit();
 
-      return new Response();
+      return NextResponse.json({ ok: true, levelUp: levelUpData });
     } catch (err) {
       dbConnection.rollback();
     }

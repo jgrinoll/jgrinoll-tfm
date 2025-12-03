@@ -3,6 +3,7 @@ import dbConnectionPool from "@/app/_lib/db/db";
 import { ReadingProgress } from "@/app/_lib/models/ReadingProgress";
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { NextResponse } from "next/server";
+import { updateUserPagesAndLevel } from "@/app/_actions/user_actions";
 
 interface ReadingProgressRowDataPacket extends RowDataPacket, ReadingProgress {}
 export async function GET(
@@ -75,13 +76,16 @@ export async function POST(
     dbConnection = await dbConnectionPool.getConnection();
 
     const [existing] = await dbConnection.execute<RowDataPacket[]>(
-      "SELECT id FROM reading_progress WHERE user_id = ? AND book_id = ?",
+      "SELECT id, pages_read FROM reading_progress WHERE user_id = ? AND book_id = ?",
       [userId, bookId]
     );
+    
+    let oldPagesRead = 0;
+    
     if (existing.length > 0) {
       const rowId = existing[0].id;
-      // Update the progress
-      // TODO - Crear mètodes auxiliars per les queries més comuns per reduir el codi duplicat.
+      oldPagesRead = existing[0].pages_read || 0;
+      
       const sql =
         "UPDATE reading_progress SET pages_read = ?, percentage = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
       const values = [pageCount, percentage ?? null, rowId];
@@ -90,9 +94,7 @@ export async function POST(
         values
       );
       console.log("Update result: ", updateResult);
-      return new Response();
     } else {
-      // Insert a new progress update
       const sql =
         "INSERT INTO reading_progress (user_id, book_id, pages_read, percentage) VALUES (?,?,?,?)";
       const values = [userId, bookId, pageCount, percentage ?? null];
@@ -101,11 +103,31 @@ export async function POST(
         values
       );
       console.log("Insert result: ", insertResult);
-      return NextResponse.json(
-        { ok: true, id: insertResult.insertId },
-        { status: 201 }
-      );
     }
+
+    const pagesDifference = pageCount - oldPagesRead;
+    let levelUpData = null;
+    
+    if (pagesDifference > 0) {
+      const levelResult = await updateUserPagesAndLevel(
+        userId,
+        pagesDifference,
+        dbConnection
+      );
+
+      if (levelResult?.leveledUp) {
+        console.log(
+          `User ${userId} leveled up from ${levelResult.oldLevel} to ${levelResult.newLevel}!`
+        );
+        levelUpData = {
+          leveledUp: true,
+          oldLevel: levelResult.oldLevel,
+          newLevel: levelResult.newLevel,
+        };
+      }
+    }
+
+    return NextResponse.json({ ok: true, levelUp: levelUpData }, { status: existing.length > 0 ? 200 : 201 });
   } catch (err) {
     console.error(err);
     return NextResponse.json(

@@ -102,7 +102,13 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
     });
 
     if (response.ok) {
+      const data = await response.json();
       message.success("S'ha actualitzat el progrés correctament.");
+      
+      if (data.levelUp?.leveledUp) {
+        message.success(`🎉 Enhorabona! Has pujat al nivell ${data.levelUp.newLevel}!`, 5);
+      }
+      
       setOpen(false);
     } else {
       message.error("Hi ha hagut un error actualitzant el progrés de lectura.");
@@ -120,7 +126,13 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
     });
 
     if (response.ok) {
+      const data = await response.json();
       message.success(`Has acabat de llegir ${book?.title}!`);
+      
+      if (data.levelUp?.leveledUp) {
+        message.success(`🎉 Enhorabona! Has pujat al nivell ${data.levelUp.newLevel}!`, 5);
+      }
+      
       setOpen(false);
       setReviewModalBookId(bookId);
       setReviewModalOpen(true);
