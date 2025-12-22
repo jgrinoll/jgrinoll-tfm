@@ -8,11 +8,13 @@ import { ResultSetHeader } from "mysql2";
 import { Connection, RowDataPacket } from "mysql2/promise";
 
 export const searchBooks = async (
-  query: string
+  query: string,
+  startIndex: number = 0
 ): Promise<GoogleBooksSearchResponse> => {
   const queryParams = new URLSearchParams({
     q: query,
     key: process.env.BOOKS_API_KEY || "",
+    startIndex: startIndex.toString(),
   });
   const res = await fetch(
     `https://www.googleapis.com/books/v1/volumes?${queryParams.toString()}`,
@@ -45,16 +47,20 @@ export const getBookDetails = async (bookId: string): Promise<GoogleBook> => {
   return book;
 };
 
-export const getRelatedBooks = async (book: GoogleBook): Promise<GoogleBook[]> => {
+export const getRelatedBooks = async (
+  book: GoogleBook
+): Promise<GoogleBook[]> => {
   const relatedBooks: GoogleBook[] = [];
   const seenIds = new Set<string>([book.id]);
 
   if (book.volumeInfo.authors && book.volumeInfo.authors.length > 0) {
     const author = book.volumeInfo.authors[0];
-    const authorResults: GoogleBooksSearchResponse = await searchBooks(`inauthor:${author}`);
-    
+    const authorResults: GoogleBooksSearchResponse = await searchBooks(
+      `inauthor:${author}`
+    );
+
     if (authorResults.items) {
-      authorResults.items.forEach(item => {
+      authorResults.items.forEach((item) => {
         if (!seenIds.has(item.id)) {
           relatedBooks.push(item);
           seenIds.add(item.id);
@@ -63,12 +69,18 @@ export const getRelatedBooks = async (book: GoogleBook): Promise<GoogleBook[]> =
     }
   }
 
-  if (relatedBooks.length < 10 && book.volumeInfo.categories && book.volumeInfo.categories.length > 0) {
+  if (
+    relatedBooks.length < 10 &&
+    book.volumeInfo.categories &&
+    book.volumeInfo.categories.length > 0
+  ) {
     const category = book.volumeInfo.categories[0];
-    const categoryResults: GoogleBooksSearchResponse = await searchBooks(`subject:${category}`);
-    
+    const categoryResults: GoogleBooksSearchResponse = await searchBooks(
+      `subject:${category}`
+    );
+
     if (categoryResults.items) {
-      categoryResults.items.forEach(item => {
+      categoryResults.items.forEach((item) => {
         if (!seenIds.has(item.id) && relatedBooks.length < 20) {
           relatedBooks.push(item);
           seenIds.add(item.id);

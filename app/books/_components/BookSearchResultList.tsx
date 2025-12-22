@@ -1,16 +1,32 @@
 "use client";
-import { GoogleBook } from "@/app/_lib/models/GoogleBook";
+import {
+  GoogleBook,
+  GoogleBooksSearchResponse,
+} from "@/app/_lib/models/GoogleBook";
 import Paragraph from "antd/es/typography/Paragraph";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BookCard from "./BookCard";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { getBook } from "@/app/api/book/[id]/route";
 
 interface BookSearchResultListProps {
   books: GoogleBook[];
+  getBooks: (page?: number) => Promise<GoogleBooksSearchResponse>;
 }
 const BookSearchResultList: React.FC<BookSearchResultListProps> = ({
-  books,
+  books: initialBooks,
+  getBooks,
 }) => {
-  if (!books || books.length === 0) {
+  const [books, setBooks] = useState(initialBooks);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const onNext = async () => {
+    const newBooks = await getBooks(currentPage);
+    setBooks((lastBooksState) => [...lastBooksState, ...newBooks.items]);
+    setCurrentPage((lastVal) => lastVal++);
+  };
+
+  if (!initialBooks || initialBooks.length === 0) {
     return <Paragraph>No s&apos;han trobat llibres.</Paragraph>;
   }
 
@@ -18,13 +34,25 @@ const BookSearchResultList: React.FC<BookSearchResultListProps> = ({
   return (
     <>
       <ul style={{ listStyleType: "none", padding: 5 }}>
-        {books.map((book) => {
-          return (
-            <li key={book.id}>
-              <BookCard book={book} />
-            </li>
-          );
-        })}
+        <InfiniteScroll
+          dataLength={books.length}
+          next={onNext}
+          hasMore={true}
+          loader={<h4>Loading...</h4>}
+          endMessage={
+            <p style={{ textAlign: "center" }}>
+              <b>No hi ha més resultats</b>
+            </p>
+          }
+        >
+          {initialBooks.map((book) => {
+            return (
+              <li key={book.id}>
+                <BookCard book={book} />
+              </li>
+            );
+          })}
+        </InfiniteScroll>
       </ul>
     </>
   );

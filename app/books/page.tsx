@@ -13,24 +13,40 @@ const Page = async ({
 }) => {
   // TODO - Support a "subject" searchParam with the category.
   let books: GoogleBook[] = [];
-  let query = "";
-
   const searchParams = await searchParamsPromise;
-  if (searchParams && searchParams.q) {
-    query = Array.isArray(searchParams.q) ? searchParams.q[0] : searchParams.q;
 
-    const result = await searchBooks(query);
+  const getBooks = async (page = 0) => {
+    "use server";
+    let query = "";
+    let finalQuery = "";
 
-    books = result.items || [];
-  }
+    const searchParams = await searchParamsPromise;
+    if (searchParams && searchParams.q) {
+      query = Array.isArray(searchParams.q)
+        ? searchParams.q[0]
+        : searchParams.q;
+
+      finalQuery = query;
+      if (searchParams.subject) {
+        finalQuery +=
+          " " + Array.isArray(searchParams.subject)
+            ? searchParams.subject[0]
+            : searchParams.subject;
+      }
+      return await searchBooks(finalQuery, page);
+    }
+
+    return { items: [], kind: "", totalItems: 0 };
+  };
+  books = (await getBooks()).items || [];
   return (
     <>
       <Paragraph>
-        <b>Mostrant resultats per</b> &quot;{query}&quot;
+        <b>Mostrant resultats per</b> &quot;{searchParams.q}&quot;
       </Paragraph>
       {/* TODO - Add filter button */}
       <Suspense fallback={<Spin />}>
-        <BookSearchResultList books={books} />
+        <BookSearchResultList books={books} getBooks={getBooks} />
       </Suspense>
     </>
   );
