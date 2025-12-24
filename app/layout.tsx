@@ -13,6 +13,14 @@ import BookReviewModal from "./_components/BookReviewModal";
 export const metadata: Metadata = {
   title: "Book Tracking App",
   description: "A Joaquim Griñó Project",
+  icons: {
+    icon: [
+      { url: "/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon/favicon.ico", sizes: "any" },
+    ],
+    apple: "/favicon/apple-touch-icon.png",
+  },
 };
 
 export default async function RootLayout({
