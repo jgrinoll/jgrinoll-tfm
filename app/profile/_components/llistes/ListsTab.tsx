@@ -11,10 +11,10 @@ import styles from "./ListsTab.module.css";
 interface ListsTabProps {
   user: UserDTO;
 }
-const ListsTab: React.FC<ListsTabProps> = ({ user }) => {
+const ListsTab: React.FC<ListsTabProps> = () => {
   const [selectedList, setSelectedList] = useState<List>("LLEGIT");
   const [loading, setLoading] = useState<boolean>(false);
-  const [userBooks, setUserBooks] = useState<UserBook[]>([]);
+  const [, setUserBooks] = useState<UserBook[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
 
   console.log("Selected list is ", selectedList);
@@ -58,7 +58,6 @@ const ListsTab: React.FC<ListsTabProps> = ({ user }) => {
           newBooks.push((await response.json()) as Book);
         }
       }
-      console.log("New books are ", newBooks);
 
       setBooks(newBooks);
     };

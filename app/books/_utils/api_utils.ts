@@ -9,12 +9,12 @@ import { Connection, RowDataPacket } from "mysql2/promise";
 
 export const searchBooks = async (
   query: string,
-  startIndex: number = 0
+  page: number = 0
 ): Promise<GoogleBooksSearchResponse> => {
   const queryParams = new URLSearchParams({
     q: query,
     key: process.env.BOOKS_API_KEY || "",
-    startIndex: startIndex.toString(),
+    startIndex: (page * 10).toString(),
   });
   const res = await fetch(
     `https://www.googleapis.com/books/v1/volumes?${queryParams.toString()}`,

@@ -63,8 +63,6 @@ export default function ContinueReadingSection() {
     };
 
     const fetchCachedBooks = async (userBooks: UserBook[]) => {
-      console.log("Fetching cached books");
-
       const responses = await Promise.all(
         userBooks.map((userBook) => fetch(`/api/book/${userBook.book_id}`))
       );
@@ -79,7 +77,6 @@ export default function ContinueReadingSection() {
           newBooks[book.id] = book;
         }
       }
-      console.log("New books are ", newBooks);
 
       setBooks(newBooks);
     };
@@ -105,7 +102,6 @@ export default function ContinueReadingSection() {
           newProgresses[progress.book_id] = progress;
         }
       }
-      console.log("New progresses are ", newProgresses);
 
       setCurrentProgresses(newProgresses);
     };

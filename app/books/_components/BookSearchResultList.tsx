@@ -4,10 +4,10 @@ import {
   GoogleBooksSearchResponse,
 } from "@/app/_lib/models/GoogleBook";
 import Paragraph from "antd/es/typography/Paragraph";
-import React, { useEffect, useState } from "react";
-import BookCard from "./BookCard";
+import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { getBook } from "@/app/api/book/[id]/route";
+import BookCard from "./BookCard";
+import { Flex, Spin } from "antd";
 
 interface BookSearchResultListProps {
   books: GoogleBook[];
@@ -18,12 +18,14 @@ const BookSearchResultList: React.FC<BookSearchResultListProps> = ({
   getBooks,
 }) => {
   const [books, setBooks] = useState(initialBooks);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const onNext = async () => {
-    const newBooks = await getBooks(currentPage);
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+    const newBooks = await getBooks(nextPage);
+
     setBooks((lastBooksState) => [...lastBooksState, ...newBooks.items]);
-    setCurrentPage((lastVal) => lastVal++);
   };
 
   if (!initialBooks || initialBooks.length === 0) {
@@ -31,6 +33,7 @@ const BookSearchResultList: React.FC<BookSearchResultListProps> = ({
   }
 
   // TODO - Implement infinite scroll
+  console.log("current page: ", currentPage);
   return (
     <>
       <ul style={{ listStyleType: "none", padding: 5 }}>
@@ -38,14 +41,18 @@ const BookSearchResultList: React.FC<BookSearchResultListProps> = ({
           dataLength={books.length}
           next={onNext}
           hasMore={true}
-          loader={<h4>Loading...</h4>}
+          loader={
+            <Flex justify="center" align="center">
+              <Spin />
+            </Flex>
+          }
           endMessage={
             <p style={{ textAlign: "center" }}>
               <b>No hi ha més resultats</b>
             </p>
           }
         >
-          {initialBooks.map((book) => {
+          {books.map((book) => {
             return (
               <li key={book.id}>
                 <BookCard book={book} />
