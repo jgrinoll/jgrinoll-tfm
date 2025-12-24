@@ -1,28 +1,51 @@
 import { getSessionInfo } from "@/app/_lib/auth_utils";
 import dbConnectionPool from "@/app/_lib/db/db";
-import { GoogleBook } from "@/app/_lib/models/GoogleBook";
 import { UserBook } from "@/app/_lib/models/UserBook";
-import { searchBooks } from "@/app/books/_utils/api_utils";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import "server-only";
 
-export async function GET(req: NextRequest) {
-  let books: GoogleBook[] = [];
-  let query = "";
-  const searchParams = req.nextUrl.searchParams;
+export async function GET(req: Request) {
+  let dbConnection;
+  try {
+    // Get search parameters
+    const url = new URL(req.url);
+    const searchParams = url.searchParams;
+    const status = searchParams.get("status");
 
-  const q = searchParams.get("q");
-  const startIndexParam = searchParams.get("startIndex");
-  /* const subject = searchParams.get("subject") */
+    // Authorize and get user id
+    const sessionInfo = await getSessionInfo();
+    if (!sessionInfo) return NextResponse.json({ ok: false }, { status: 401 });
+    const { id: userId } = sessionInfo;
 
-  if (searchParams && q) {
-    query = Array.isArray(q) ? q[0] : q;
-    const startIndex = Array.isArray(startIndexParam)
-      ? parseInt(startIndexParam[0])
-      : parseInt(startIndexParam ?? "0");
+    // Get the data from DB
+    dbConnection = await dbConnectionPool.getConnection();
 
-    const result = await searchBooks(query, startIndex);
+    console.log(`Trying to find user ${userId} books`);
 
-    books = result.items || [];
+    let sql = "SELECT * FROM user_books WHERE user_id = ?";
+    const values: (string | number)[] = [userId];
+    if (status) {
+      console.log(`Trying to find user ${userId} books from list ${status}`);
+      sql += " AND status = ?";
+      values.push(status);
+    }
+    const [results] = await dbConnection.execute(sql, values);
+    console.log("Query results are: ", results);
+    return NextResponse.json(results as UserBook[]);
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  } finally {
+    if (dbConnection) dbConnection.release();
   }
+}
+
+export async function DELETE(req: Request) {
+  // return an empty JSON response and delete the session cookie
+  const res = NextResponse.json({ ok: true });
+  res.cookies.delete("session");
+  return res;
 }

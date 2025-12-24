@@ -3,7 +3,7 @@ import BookCover from "../books/_components/BookCover";
 import Paragraph from "antd/es/typography/Paragraph";
 
 interface CategoryCardProps {
-  thumbnail: string;
+  thumbnail?: string;
   name: string;
 }
 const CategoryCard: React.FC<CategoryCardProps> = ({ thumbnail, name }) => {
