@@ -8,6 +8,7 @@ import BookCover from "../../_components/BookCover";
 import ReviewsInfo from "../../_components/ReviewsInfo";
 import BookInfoTags from "./BookInfoTags";
 import RelatedBookList from "./RelatedBookList";
+import BackButton from "./BackButton";
 
 interface BookDetailProps {
   book: GoogleBook;
@@ -15,6 +16,7 @@ interface BookDetailProps {
 const BookDetail: React.FC<BookDetailProps> = ({ book }) => {
   return (
     <Space vertical style={{ width: "100%" }}>
+      <BackButton />
       <Title level={1} style={{ margin: 0 }}>
         {book.volumeInfo.title}
       </Title>
