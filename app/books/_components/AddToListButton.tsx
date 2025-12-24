@@ -1,15 +1,16 @@
 import {
   updateReadingProgressModalBookId,
   updateReadingProgressModalOpen,
+  userDataAtom,
 } from "@/app/_lib/jotai/atoms";
 import List, { ListsEnum } from "@/app/_lib/models/ListsEnum";
 import { UserBook } from "@/app/_lib/models/UserBook";
 import { DownOutlined } from "@ant-design/icons";
 import { Button, Dropdown, message, Space } from "antd";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import React, { useEffect, useState } from "react";
-
-// TODO - If user is not logged in when showing this component, it should open the login modal instead.
+import LoginModal from "@/app/_components/auth/LoginModal";
+import RegisterModal from "@/app/_components/auth/RegisterModal";
 interface AddToListButtonProps {
   bookId: string;
 }
@@ -24,6 +25,24 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({ bookId }) => {
   );
 
   const [loading, setLoading] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [registerModalOpen, setRegisterModalOpen] = useState(false);
+  const [userData, setUserData] = useAtom(userDataAtom);
+
+  const isAuthenticated = (): boolean => userData !== null;
+
+  const handleAuthenticatedAction = (action: () => void) => {
+    if (!isAuthenticated()) {
+      setLoginModalOpen(true);
+      return;
+    }
+    action();
+  };
+
+  const onRegisterSelected = () => {
+    setRegisterModalOpen(true);
+    setLoginModalOpen(false);
+  };
 
   useEffect(() => {
     const fetchBook = async (bookId: string) => {
@@ -39,6 +58,10 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({ bookId }) => {
             // User doesn't have the book in any list
             // No errors shown
             break;
+          case 401:
+            // User session is expired or invalid
+            setUserData(null);
+            break;
           default:
             message.error(
               `Error inesperat recollint les dades del llibre ${bookId}`
@@ -47,8 +70,10 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({ bookId }) => {
       }
     };
 
-    fetchBook(bookId);
-  }, [bookId, refetchUserBook]);
+    if (userData) {
+      fetchBook(bookId);
+    }
+  }, [bookId, refetchUserBook, userData, setUserData]);
 
   const onAddToList = async (list: List) => {
     setLoading(true);
@@ -81,33 +106,49 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({ bookId }) => {
       .filter((option) => option.key !== userBook?.status);
 
     return (
-      <Space.Compact>
-        <Button
-          size="small"
-          type="primary"
-          onClick={() => onAddToList("VULL_LLEGIR")}
-          disabled={userBook?.status === "VULL_LLEGIR"}
-          loading={loading}
-        >
-          {!userBook || userBook.status === "VULL_LLEGIR"
-            ? "Vull llegir"
-            : ListsEnum[userBook.status]}
-        </Button>
-        <Dropdown
-          menu={{
-            items: listOptions,
-            onClick: ({ key }) => onAddToList(key as List),
-          }}
-          placement="bottomRight"
-        >
+      <>
+        <Space.Compact>
           <Button
             size="small"
             type="primary"
-            icon={<DownOutlined />}
-            disabled={loading}
-          />
-        </Dropdown>
-      </Space.Compact>
+            onClick={() =>
+              handleAuthenticatedAction(() => onAddToList("VULL_LLEGIR"))
+            }
+            disabled={userBook?.status === "VULL_LLEGIR"}
+            loading={loading}
+          >
+            {!userBook || userBook.status === "VULL_LLEGIR"
+              ? "Vull llegir"
+              : ListsEnum[userBook.status]}
+          </Button>
+          <Dropdown
+            menu={{
+              items: listOptions,
+              onClick: ({ key }) =>
+                handleAuthenticatedAction(() => onAddToList(key as List)),
+            }}
+            placement="bottomRight"
+          >
+            <Button
+              size="small"
+              type="primary"
+              icon={<DownOutlined />}
+              disabled={loading}
+            />
+          </Dropdown>
+        </Space.Compact>
+        <LoginModal
+          open={loginModalOpen}
+          onLogin={() => setLoginModalOpen(false)}
+          onCancel={() => setLoginModalOpen(false)}
+          onRegisterSelected={onRegisterSelected}
+        />
+        <RegisterModal
+          open={registerModalOpen}
+          onRegister={() => setRegisterModalOpen(false)}
+          onCancel={() => setRegisterModalOpen(false)}
+        />
+      </>
     );
   }
 
