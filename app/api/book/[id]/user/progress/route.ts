@@ -35,6 +35,12 @@ export async function GET(
     }
 
     return NextResponse.json(results[0] as ReadingProgress);
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   } finally {
     if (dbConnection) dbConnection.release();
   }

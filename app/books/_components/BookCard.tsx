@@ -8,11 +8,13 @@ import React from "react";
 import BookCover from "./BookCover";
 import ReviewsInfo from "./ReviewsInfo";
 import AddToListButton from "./AddToListButton";
+import { UserBook } from "@/app/_lib/models/UserBook";
 
 interface BookCardProps {
   book: GoogleBook;
+  userBook?: UserBook;
 }
-const BookCard: React.FC<BookCardProps> = ({ book }) => {
+const BookCard: React.FC<BookCardProps> = ({ book, userBook }) => {
   const router = useRouter();
   return (
     <Card key={book.id} style={{ marginBottom: "16px" }}>
@@ -53,7 +55,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
               >
                 Veure detall
               </Button>
-              <AddToListButton bookId={book.id} />
+              <AddToListButton bookId={book.id} initialUserBook={userBook} />
             </Flex>
           </Flex>
         </Col>

@@ -1,3 +1,5 @@
+import LoginModal from "@/app/_components/auth/LoginModal";
+import RegisterModal from "@/app/_components/auth/RegisterModal";
 import {
   updateReadingProgressModalBookId,
   updateReadingProgressModalOpen,
@@ -7,16 +9,20 @@ import List, { ListsEnum } from "@/app/_lib/models/ListsEnum";
 import { UserBook } from "@/app/_lib/models/UserBook";
 import { DownOutlined } from "@ant-design/icons";
 import { Button, Dropdown, message, Space } from "antd";
+import dayjs from "dayjs";
 import { useAtom, useSetAtom } from "jotai";
 import React, { useEffect, useState } from "react";
-import LoginModal from "@/app/_components/auth/LoginModal";
-import RegisterModal from "@/app/_components/auth/RegisterModal";
 interface AddToListButtonProps {
   bookId: string;
+  initialUserBook?: UserBook;
 }
-const AddToListButton: React.FC<AddToListButtonProps> = ({ bookId }) => {
-  const [userBook, setUserBook] = useState<UserBook | undefined>();
-  const [refetchUserBook, setRefetchUserBook] = useState(0);
+const AddToListButton: React.FC<AddToListButtonProps> = ({
+  bookId,
+  initialUserBook,
+}) => {
+  const [userBook, setUserBook] = useState<UserBook | undefined>(
+    initialUserBook
+  );
   const setUpdateReadingProgressModalOpen = useSetAtom(
     updateReadingProgressModalOpen
   );
@@ -27,7 +33,7 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({ bookId }) => {
   const [loading, setLoading] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
-  const [userData, setUserData] = useAtom(userDataAtom);
+  const [userData] = useAtom(userDataAtom);
 
   const isAuthenticated = (): boolean => userData !== null;
 
@@ -45,35 +51,8 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({ bookId }) => {
   };
 
   useEffect(() => {
-    const fetchBook = async (bookId: string) => {
-      // Fetch book data from database
-      // TODO - Session could be expired, add catch for errors 401 and update website accordingly.
-      const response = await fetch(`/api/book/${bookId}/user`);
-      if (response.ok) {
-        const responseBody = await response.json();
-        setUserBook(responseBody as UserBook);
-      } else {
-        switch (response.status) {
-          case 404:
-            // User doesn't have the book in any list
-            // No errors shown
-            break;
-          case 401:
-            // User session is expired or invalid
-            setUserData(null);
-            break;
-          default:
-            message.error(
-              `Error inesperat recollint les dades del llibre ${bookId}`
-            );
-        }
-      }
-    };
-
-    if (userData) {
-      fetchBook(bookId);
-    }
-  }, [bookId, refetchUserBook, userData, setUserData]);
+    setUserBook(initialUserBook);
+  }, [initialUserBook]);
 
   const onAddToList = async (list: List) => {
     setLoading(true);
@@ -85,7 +64,17 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({ bookId }) => {
 
     if (response.ok) {
       message.success("S'ha afegit el llibre a la llista.");
-      setRefetchUserBook((val) => val + 1);
+      const responseBody = await response.json();
+      if (responseBody.id) {
+        setUserBook({
+          id: responseBody.id,
+          book_id: bookId,
+          user_id: userData?.id || 0,
+          status: list,
+          created_at: dayjs(),
+          updated_at: dayjs(),
+        });
+      }
     } else {
       message.error("Hi ha hagut un error afegint el llibre a la llista.");
     }
