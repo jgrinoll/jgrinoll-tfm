@@ -171,3 +171,24 @@ const insertBook = async (book: GoogleBook, connection?: Connection) => {
 
   await dbConnection.execute<ResultSetHeader>(sql, values);
 };
+
+export const getBooksByIds = async (
+  bookIds: string[]
+): Promise<GoogleBook[]> => {
+  if (bookIds.length === 0) {
+    return [];
+  }
+
+  const fetchPromises = bookIds.map(async (bookId) => {
+    try {
+      return await getBookDetails(bookId);
+    } catch (error) {
+      console.error(`Failed to fetch book ${bookId}:`, error);
+      return null;
+    }
+  });
+
+  const results = await Promise.all(fetchPromises);
+
+  return results.filter((book): book is GoogleBook => book !== null);
+};

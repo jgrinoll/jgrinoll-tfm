@@ -23,8 +23,11 @@ const BookSearchResultList: React.FC<BookSearchResultListProps> = ({
 }) => {
   const [books, setBooks] = useState(initialBooks);
   const [currentPage, setCurrentPage] = useState(0);
+  const [hasMore, setHasMore] = useState(initialBooks.length > 0);
   const [userBooks, setUserBooks] = useState<Map<string, UserBook>>(new Map());
   const userData = useAtomValue(userDataAtom);
+
+  console.log("Initial books: ", initialBooks);
 
   useEffect(() => {
     if (userData && books.length > 0) {
@@ -49,9 +52,17 @@ const BookSearchResultList: React.FC<BookSearchResultListProps> = ({
   }, [userData, books]);
 
   const onNext = async () => {
+    console.log("Fetching more books");
+
     const nextPage = currentPage + 1;
     setCurrentPage(nextPage);
     const newBooks = await getBooks(nextPage);
+    console.log("New books: ", newBooks);
+
+    if (!newBooks.items || newBooks.items.length === 0) {
+      setHasMore(false);
+      return;
+    }
 
     setBooks((lastBooksState) => [...lastBooksState, ...newBooks.items]);
   };
@@ -66,7 +77,7 @@ const BookSearchResultList: React.FC<BookSearchResultListProps> = ({
         <InfiniteScroll
           dataLength={books.length}
           next={onNext}
-          hasMore={true}
+          hasMore={hasMore}
           loader={
             <Flex justify="center" align="center">
               <Spin />

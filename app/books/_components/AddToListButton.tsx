@@ -2,6 +2,8 @@
 import LoginModal from "@/app/_components/auth/LoginModal";
 import RegisterModal from "@/app/_components/auth/RegisterModal";
 import {
+  bookReviewModalBookId,
+  bookReviewModalOpen,
   updateReadingProgressModalBookId,
   updateReadingProgressModalOpen,
   userDataAtom,
@@ -31,6 +33,8 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({
   const setUpdateReadingProgressModalBookId = useSetAtom(
     updateReadingProgressModalBookId
   );
+  const setBookReviewModalOpen = useSetAtom(bookReviewModalOpen);
+  const setBookReviewModalBookId = useSetAtom(bookReviewModalBookId);
 
   const [loading, setLoading] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -76,6 +80,11 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({
           created_at: dayjs(),
           updated_at: dayjs(),
         });
+      }
+
+      if (list === "LLEGIT") {
+        setBookReviewModalBookId(bookId);
+        setBookReviewModalOpen(true);
       }
     } else {
       message.error("Hi ha hagut un error afegint el llibre a la llista.");

@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 interface SubjectFilterProps {
   subject?: string;
   searchQuery?: string;
+  minRating?: number;
 }
 
 const SubjectFilter: React.FC<SubjectFilterProps> = ({
   subject,
   searchQuery,
+  minRating,
 }) => {
   const router = useRouter();
 
@@ -22,11 +24,12 @@ const SubjectFilter: React.FC<SubjectFilterProps> = ({
   const label = category ? category.label : subject;
 
   const handleRemove = () => {
-    if (searchQuery) {
-      router.push(`/books?q=${searchQuery}`);
-    } else {
-      router.push("/books");
-    }
+    const params = new URLSearchParams();
+    if (searchQuery) params.set("q", searchQuery);
+    if (minRating) params.set("minRating", minRating.toString());
+
+    const url = params.toString() ? `/books?${params.toString()}` : "/books";
+    router.push(url);
   };
 
   return (
