@@ -63,8 +63,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
       <Modal {...props} title="Iniciar Sessió" footer={null}>
         <Form
           name="login-form"
-          labelCol={{ span: 7 }}
-          wrapperCol={{ span: 17 }}
+          layout="vertical"
           onFinish={onFinish}
         >
           <Form.Item<FieldType>

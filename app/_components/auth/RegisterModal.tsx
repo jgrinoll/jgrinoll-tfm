@@ -89,8 +89,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
       <Form
         id="register-form"
         name="register-form"
-        labelCol={{ span: 7 }}
-        wrapperCol={{ span: 17 }}
+        layout="vertical"
         onFinish={onFinish}
       >
         <Form.Item<FieldType>

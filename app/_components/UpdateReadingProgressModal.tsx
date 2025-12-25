@@ -228,8 +228,6 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
         <Flex justify="center" align="center">
           <Form
             name="login-form"
-            labelCol={{ span: 7 }}
-            wrapperCol={{ span: 17 }}
             onFinish={onFinish}
             form={form}
             layout="vertical"
