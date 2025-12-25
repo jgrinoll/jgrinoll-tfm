@@ -1,5 +1,5 @@
 "use client";
-import { Flex, Rate, Tag } from "antd";
+import { Flex, Rate } from "antd";
 import { useRouter } from "next/navigation";
 
 interface RatingFilterProps {
@@ -16,23 +16,10 @@ const RatingFilter: React.FC<RatingFilterProps> = ({
   const router = useRouter();
 
   const handleRatingChange = (value: number) => {
-    if (value === 0) {
-      handleRemove();
-      return;
-    }
-
     const params = new URLSearchParams();
     if (searchQuery) params.set("q", searchQuery);
     if (subject) params.set("subject", subject);
-    params.set("minRating", value.toString());
-
-    router.push(`/books?${params.toString()}`);
-  };
-
-  const handleRemove = () => {
-    const params = new URLSearchParams();
-    if (searchQuery) params.set("q", searchQuery);
-    if (subject) params.set("subject", subject);
+    if (value > 0) params.set("minRating", value.toString());
 
     const url = params.toString() ? `/books?${params.toString()}` : "/books";
     router.push(url);
@@ -47,11 +34,6 @@ const RatingFilter: React.FC<RatingFilterProps> = ({
           onChange={handleRatingChange}
           allowClear
         />
-        {minRating && (
-          <Tag closable onClose={handleRemove} color="orange">
-            <strong>Puntuació:</strong> {minRating}+ estrelles
-          </Tag>
-        )}
       </Flex>
     </div>
   );

@@ -5,8 +5,8 @@ import { GoogleBook } from "../_lib/models/GoogleBook";
 import Paragraph from "antd/es/typography/Paragraph";
 import { Suspense } from "react";
 import { Spin } from "antd";
-import SubjectFilter from "./_components/SubjectFilter";
 import RatingFilter from "./_components/RatingFilter";
+import CategorySelector from "./_components/CategorySelector";
 import { getRatedBookIds, filterBooksByText } from "./_utils/rating_utils";
 
 const Page = async ({
@@ -116,8 +116,12 @@ const Page = async ({
           <b>Mostrant resultats per</b> &quot;{searchParams.q}&quot;
         </Paragraph>
       )}
+      <CategorySelector
+        subject={subject}
+        searchQuery={q}
+        minRating={minRating}
+      />
       <RatingFilter minRating={minRating} searchQuery={q} subject={subject} />
-      <SubjectFilter subject={subject} searchQuery={q} minRating={minRating} />
       <Suspense fallback={<Spin />}>
         <BookSearchResultList
           key={`${q}-${subject}-${minRating}`}

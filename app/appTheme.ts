@@ -42,8 +42,12 @@ export const appTheme: ThemeConfig = {
       colorBorder: "#ab77ff",
     },
     Select: {
+      colorPrimary: "#eb2f96",
+      algorithm: true,
       borderRadius: 12,
       controlHeight: 44,
+      colorBgBase: "#ffffff",
+      colorBgContainer: "#ffffff",
     },
     Modal: {
       colorBgElevated: "#fcf1f4",

@@ -70,6 +70,7 @@ const ListsTab: React.FC<ListsTabProps> = () => {
       <Select
         defaultValue="LLEGIT"
         onChange={(val) => setSelectedList(val as List)}
+        style={{ width: 200 }}
         options={[
           {
             value: "VULL_LLEGIR",
