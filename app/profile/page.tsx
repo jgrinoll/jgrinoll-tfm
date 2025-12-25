@@ -1,8 +1,9 @@
 import { getUserData } from "@/app/_actions/user_actions";
 import { getSessionInfo } from "@/app/_lib/auth_utils";
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Col, Flex, Row, Space, Tabs } from "antd";
+import { Avatar, Col, Flex, Row, Tabs } from "antd";
 import Title from "antd/es/typography/Title";
+import Text from "antd/es/typography/Text";
 import { redirect } from "next/navigation";
 import "server-only";
 import LogoutButton from "./_components/LogoutButton";
@@ -62,7 +63,21 @@ export default async function Page({
             vertical
             style={{ padding: ".5rem", width: "100%", height: "100%" }}
           >
-            <Title level={1}>{user?.username}</Title>
+            <div>
+              {user?.name && (
+                <Title level={1} style={{ marginBottom: 0 }}>
+                  {user.name}
+                </Title>
+              )}
+              <Title level={3} style={{ marginTop: user?.name ? "1rem" : 0 }}>
+                {user?.username}
+              </Title>
+              {user?.bio && (
+                <Text style={{ display: "block", marginTop: "0.5rem", whiteSpace: "pre-wrap" }}>
+                  {user.bio}
+                </Text>
+              )}
+            </div>
             <Flex justify="space-evenly" style={{ width: "100%" }}>
               <EditProfileButton user={user!} />
               <LogoutButton />

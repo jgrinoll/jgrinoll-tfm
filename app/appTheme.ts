@@ -67,8 +67,11 @@ export const appTheme: ThemeConfig = {
       footerPadding: 0,
     },
     Typography: {
-      fontSizeHeading1: 26,
-      fontSizeHeading2: 18,
+      fontSizeHeading1: 38,
+      fontSizeHeading2: 30,
+      fontSizeHeading3: 24,
+      fontSizeHeading4: 20,
+      fontSizeHeading5: 16,
       titleMarginBottom: 0,
     },
     Progress: {

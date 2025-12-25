@@ -1,4 +1,4 @@
-import { Connection, PoolConnection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import { PoolConnection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import "server-only";
 import dbConnectionPool from "../_lib/db/db";
 import UserDTO from "../_lib/models/UserDTO";
@@ -7,7 +7,7 @@ import { calculateLevelFromPages } from "../_lib/utils/leveling_utils";
 export const getUserData = async (user_id: number): Promise<UserDTO | null> => {
   const dbConnection = await dbConnectionPool.getConnection();
   const sql =
-    "SELECT id, username, email, avatar_url, created_at, updated_at, level, total_pages_read FROM users WHERE id = ?";
+    "SELECT id, username, email, avatar_url, created_at, updated_at, level, total_pages_read, name, bio FROM users WHERE id = ?";
   const values = [user_id];
 
   try {

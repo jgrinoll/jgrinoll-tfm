@@ -14,10 +14,9 @@ import React, { useState } from "react";
 import { authFetch } from "@/app/_lib/utils/authFetch";
 
 type FieldType = {
-  email: string;
   username: string;
-  password: string;
-  confirmPassword: string;
+  name: string;
+  bio: string;
 };
 
 type EditProfileModalProps = ModalProps & {
@@ -37,10 +36,11 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
 
     setLoading(true);
 
-    const userData: UserDTO = {
-      email: formValues.email,
+    const userData: Partial<UserDTO> = {
       username: formValues.username,
-    } as UserDTO;
+      name: formValues.name || null,
+      bio: formValues.bio || null,
+    };
 
     const res = await authFetch("/api/user", {
       method: "PATCH",
@@ -55,7 +55,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
       .catch(() => ({ ok: false, error: "Responsta invàlida del servidor" }));
 
     if (!res.ok) {
-      // Show error message to the user
       message.error(data?.error || "Hi ha hagut un error editant el perfil");
       setLoading(false);
       return;
@@ -74,38 +73,27 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
           <Button
             type="primary"
             htmlType="submit"
-            form="register-form"
+            form="edit-profile-form"
             loading={loading}
           >
-            Registrar-me
+            Guardar canvis
           </Button>
         </Flex>
       }
-      title="Registrar-me"
+      title="Editar perfil"
     >
       <Divider style={{ border: "1px solid #2A2A2A" }} />
-      {/* //TODO - Implementar la modificació de les dades del perfil de l'usuari. */}
-      <h1>FORMULARI PROVISIONAL, NO ES POT EDITAR EL PERFIL</h1>
       <Form
-        id="register-form"
-        name="register-form"
+        id="edit-profile-form"
+        name="edit-profile-form"
         layout="vertical"
         onFinish={onFinish}
+        initialValues={{
+          username: user.username,
+          name: user.name || '',
+          bio: user.bio || ''
+        }}
       >
-        <Form.Item<FieldType>
-          label="Correu electrònic"
-          name="email"
-          rules={[
-            { required: true, message: "El correu electrònic és necessari!" },
-            { type: "email", message: "El correu electrònic no és vàlid!" },
-            {
-              max: 100,
-              message: "El correu electrònic no pot superar els 100 caràcters!",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
         <Form.Item<FieldType>
           label="Nom d'usuari"
           name="username"
@@ -120,43 +108,28 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
           <Input />
         </Form.Item>
         <Form.Item<FieldType>
-          label="Contrasenya"
-          name="password"
+          label="Nom complet"
+          name="name"
           rules={[
-            { required: true, message: "La contrasenya és obligatòria!" },
             {
-              min: 8,
-              message: "La contrasenya ha de tenir un mínim de 8 caràcters!",
-            },
-            {
-              max: 30,
-              message: "La contrasenya no pot superar els 30 caràcters!",
+              max: 128,
+              message: "El nom no pot superar els 128 caràcters!",
             },
           ]}
         >
-          <Input.Password />
+          <Input />
         </Form.Item>
         <Form.Item<FieldType>
-          label="Confirma la contrasenya"
-          name="confirmPassword"
+          label="Biografia"
+          name="bio"
           rules={[
             {
-              required: true,
-              message: "És obligatori confirmar la contrasenya!",
+              max: 512,
+              message: "La biografia no pot superar els 512 caràcters!",
             },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(
-                  new Error("Les contrasenyes no coincideixen!")
-                );
-              },
-            }),
           ]}
         >
-          <Input.Password />
+          <Input.TextArea rows={4} />
         </Form.Item>
       </Form>
     </Modal>

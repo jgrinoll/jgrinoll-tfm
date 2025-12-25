@@ -10,4 +10,6 @@ export default interface UserDTO {
   updated_at: Dayjs | undefined;
   level: number | undefined;
   total_pages_read: number | undefined;
+  name: string | null | undefined;
+  bio: string | null | undefined;
 }
