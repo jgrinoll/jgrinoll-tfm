@@ -11,6 +11,7 @@ import { Flex, Spin } from "antd";
 import { UserBook } from "@/app/_lib/models/UserBook";
 import { useAtomValue } from "jotai";
 import { userDataAtom } from "@/app/_lib/jotai/atoms";
+import { authFetch } from "@/app/_lib/utils/authFetch";
 
 interface BookSearchResultListProps {
   books: GoogleBook[];
@@ -28,7 +29,7 @@ const BookSearchResultList: React.FC<BookSearchResultListProps> = ({
   useEffect(() => {
     if (userData && books.length > 0) {
       const bookIds = books.map((b) => b.id);
-      fetch("/api/user/books-status", {
+      authFetch("/api/user/books-status", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bookIds }),

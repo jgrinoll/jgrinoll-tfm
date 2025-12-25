@@ -11,6 +11,7 @@ import {
   ModalProps,
 } from "antd";
 import React, { useState } from "react";
+import { authFetch } from "@/app/_lib/utils/authFetch";
 
 type FieldType = {
   email: string;
@@ -41,7 +42,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
       username: formValues.username,
     } as UserDTO;
 
-    const res = await fetch("/api/user", {
+    const res = await authFetch("/api/user", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

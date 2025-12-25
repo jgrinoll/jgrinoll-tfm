@@ -1,4 +1,4 @@
-import { getSessionInfo } from "@/app/_lib/auth_utils";
+import { refreshSessionIfValid } from "@/app/_lib/auth_utils";
 import dbConnectionPool from "@/app/_lib/db/db";
 import { NextResponse } from "next/server";
 import { RowDataPacket } from "mysql2/promise";
@@ -30,7 +30,7 @@ interface UserStats extends RowDataPacket {
 export async function GET() {
   let dbConnection;
   try {
-    const sessionInfo = await getSessionInfo();
+    const sessionInfo = await refreshSessionIfValid();
     if (!sessionInfo) return NextResponse.json({ ok: false }, { status: 401 });
     const { id: userId } = sessionInfo;
 

@@ -24,24 +24,35 @@ export async function createSession(payload: SessionPayload) {
   });
 }
 
-export async function updateSession() {
+export async function updateSession(): Promise<boolean> {
   const session = (await cookies()).get("session")?.value;
-  const payload = getSessionInfo();
+  const payload = await getSessionInfo();
 
   if (!session || !payload) {
-    return null;
+    return false;
   }
 
-  const expires = new Date(Date.now() + 7200); // 2h
+  const newSession = await encrypt(payload as SessionPayload);
+  const expires = new Date(Date.now() + 2 * 60 * 60 * 1000);
 
   const cookieStore = await cookies();
-  cookieStore.set("session", session, {
+  cookieStore.set("session", newSession, {
     httpOnly: true,
     secure: true,
     expires: expires,
     sameSite: "lax",
     path: "/",
   });
+
+  return true;
+}
+
+export async function refreshSessionIfValid(): Promise<SessionPayload | null> {
+  const sessionInfo = await getSessionInfo();
+  if (!sessionInfo) return null;
+
+  await updateSession();
+  return sessionInfo;
 }
 
 const secretKey = process.env.JWT_PRIVATE_KEY;

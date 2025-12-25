@@ -76,7 +76,7 @@ const AchievementsTab: React.FC<AchievementsTabProps> = ({ user }) => {
       ) : achievements.length === 0 ? (
         <Title level={4}>
           {showCompleted
-            ? "No has completat cap assoliment encara"
+            ? "No has completat cap assoliment"
             : "No hi ha assoliments pendents"}
         </Title>
       ) : (

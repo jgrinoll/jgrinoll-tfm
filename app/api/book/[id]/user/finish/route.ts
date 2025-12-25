@@ -1,4 +1,4 @@
-import { getSessionInfo } from "@/app/_lib/auth_utils";
+import { refreshSessionIfValid } from "@/app/_lib/auth_utils";
 import dbConnectionPool from "@/app/_lib/db/db";
 import { Connection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { NextResponse } from "next/server";
@@ -12,7 +12,7 @@ export async function POST(
   let dbConnection;
   try {
     // Authorize and get user id
-    const sessionInfo = await getSessionInfo();
+    const sessionInfo = await refreshSessionIfValid();
     if (!sessionInfo) return NextResponse.json({ ok: false }, { status: 401 });
     const { id: userId } = sessionInfo;
 

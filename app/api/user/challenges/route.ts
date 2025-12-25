@@ -1,4 +1,4 @@
-import { getSessionInfo } from "@/app/_lib/auth_utils";
+import { refreshSessionIfValid } from "@/app/_lib/auth_utils";
 import dbConnectionPool from "@/app/_lib/db/db";
 import { UserChallengeWithDetails } from "@/app/_lib/models/UserChallenge";
 import { RowDataPacket } from "mysql2/promise";
@@ -24,7 +24,7 @@ interface ChallengeWithProgressRow extends RowDataPacket {
 export async function GET(request: NextRequest) {
   let dbConnection;
   try {
-    const sessionInfo = await getSessionInfo();
+    const sessionInfo = await refreshSessionIfValid();
     if (!sessionInfo) return NextResponse.json({ ok: false }, { status: 401 });
     const { id: userId } = sessionInfo;
 

@@ -18,8 +18,6 @@ export default async function Page({
 }: {
   params: Promise<{ userId?: number }>;
 }) {
-  console.log("Loading the profile page...");
-
   let { userId } = await params;
   if (!userId) {
     const sessionInfo = await getSessionInfo();

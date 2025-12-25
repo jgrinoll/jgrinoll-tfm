@@ -1,4 +1,4 @@
-import { getSessionInfo } from "@/app/_lib/auth_utils";
+import { refreshSessionIfValid } from "@/app/_lib/auth_utils";
 import dbConnectionPool from "@/app/_lib/db/db";
 import List from "@/app/_lib/models/ListsEnum";
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
@@ -12,7 +12,7 @@ interface AddToListProps {
 export async function POST(req: Request) {
   let dbConnection;
   try {
-    const sessioninfo = await getSessionInfo();
+    const sessioninfo = await refreshSessionIfValid();
     if (!sessioninfo) return NextResponse.json({ ok: false }, { status: 401 });
 
     const userId = sessioninfo.id;

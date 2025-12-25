@@ -21,6 +21,7 @@ import {
 import Book from "../_lib/models/Book";
 import { ReadingProgress } from "../_lib/models/ReadingProgress";
 import { UserBook } from "../_lib/models/UserBook";
+import { authFetch } from "../_lib/utils/authFetch";
 
 type FieldType = {
   pageCount: number;
@@ -66,8 +67,8 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
       const [bookResponse, userBookResponse, readingProgressResponse] =
         await Promise.all([
           fetch(`/api/book/${bookId}`),
-          fetch(`/api/book/${bookId}/user`),
-          fetch(`/api/book/${bookId}/user/progress`),
+          authFetch(`/api/book/${bookId}/user`),
+          authFetch(`/api/book/${bookId}/user/progress`),
         ]);
 
       if (!bookResponse.ok || !userBookResponse.ok) {
@@ -96,7 +97,7 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
   const onFinish: Callbacks<FieldType>["onFinish"] = async (values) => {
     setLoading(true);
 
-    const response = await fetch(`api/book/${bookId}/user/progress`, {
+    const response = await authFetch(`api/book/${bookId}/user/progress`, {
       method: "POST",
       body: JSON.stringify(values),
     });
@@ -132,7 +133,7 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
   const onBookFinish = async () => {
     setLoading(true);
 
-    const response = await fetch(`/api/book/${bookId}/user/finish`, {
+    const response = await authFetch(`/api/book/${bookId}/user/finish`, {
       method: "POST",
       body: JSON.stringify({}),
     });

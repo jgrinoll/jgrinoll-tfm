@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import MiniBookCard from "@/app/_components/MiniBookCard";
 import LevelProgressBar from "./LevelProgressBar";
 import styles from "./StatisticsTab.module.css";
+import { authFetch } from "@/app/_lib/utils/authFetch";
 
 interface StatisticsTabProps {
   user: UserDTO;
@@ -20,7 +21,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({ user }) => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch("/api/user/stats");
+        const response = await authFetch("/api/user/stats");
         if (!response.ok) {
           message.error("Error carregant les estadístiques");
           return;

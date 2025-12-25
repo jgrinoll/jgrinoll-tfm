@@ -1,4 +1,4 @@
-import { getSessionInfo } from "@/app/_lib/auth_utils";
+import { refreshSessionIfValid } from "@/app/_lib/auth_utils";
 import dbConnectionPool from "@/app/_lib/db/db";
 import { RowDataPacket } from "mysql2/promise";
 import { NextResponse } from "next/server";
@@ -14,7 +14,7 @@ interface UserBookStatus extends RowDataPacket {
 export async function POST(req: Request) {
   let dbConnection;
   try {
-    const sessionInfo = await getSessionInfo();
+    const sessionInfo = await refreshSessionIfValid();
     if (!sessionInfo) return NextResponse.json({ ok: false }, { status: 401 });
 
     const { bookIds }: { bookIds: string[] } = await req.json();

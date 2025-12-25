@@ -1,4 +1,4 @@
-import { getSessionInfo } from "@/app/_lib/auth_utils";
+import { refreshSessionIfValid } from "@/app/_lib/auth_utils";
 import dbConnectionPool from "@/app/_lib/db/db";
 import { ReadingProgress } from "@/app/_lib/models/ReadingProgress";
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
@@ -16,7 +16,7 @@ export async function GET(
 ) {
   let dbConnection;
   try {
-    const sessioninfo = await getSessionInfo();
+    const sessioninfo = await refreshSessionIfValid();
     if (!sessioninfo) return NextResponse.json({ ok: false }, { status: 401 });
 
     const { id: bookId } = await context.params;
@@ -74,7 +74,7 @@ export async function POST(
     }
 
     // Authorize and get user id
-    const sessionInfo = await getSessionInfo();
+    const sessionInfo = await refreshSessionIfValid();
     if (!sessionInfo) return NextResponse.json({ ok: false }, { status: 401 });
     const { id: userId } = sessionInfo;
 

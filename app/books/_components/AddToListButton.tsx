@@ -6,6 +6,7 @@ import {
   updateReadingProgressModalOpen,
   userDataAtom,
 } from "@/app/_lib/jotai/atoms";
+import { authFetch } from "@/app/_lib/utils/authFetch";
 import List, { ListsEnum } from "@/app/_lib/models/ListsEnum";
 import { UserBook } from "@/app/_lib/models/UserBook";
 import { DownOutlined } from "@ant-design/icons";
@@ -58,7 +59,7 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({
   const onAddToList = async (list: List) => {
     setLoading(true);
 
-    const response = await fetch("/api/user/list", {
+    const response = await authFetch("/api/user/list", {
       method: "POST",
       body: JSON.stringify({ list: list, bookId: bookId }),
     });

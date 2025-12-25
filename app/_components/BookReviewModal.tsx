@@ -20,6 +20,7 @@ import {
 import Book from "../_lib/models/Book";
 import { Review } from "../_lib/models/Review";
 import { getShortTitle } from "../_lib/utils/book_utils";
+import { authFetch } from "../_lib/utils/authFetch";
 
 type FieldType = {
   rating: number;
@@ -51,7 +52,7 @@ const BookReviewModal: React.FC<ModalProps> = ({ ...props }) => {
 
       const [bookResponse, reviewResponse] = await Promise.all([
         fetch(`/api/book/${bookId}`),
-        fetch(`/api/book/${bookId}/review`),
+        authFetch(`/api/book/${bookId}/review`),
       ]);
 
       if (!bookResponse.ok) {
@@ -76,7 +77,7 @@ const BookReviewModal: React.FC<ModalProps> = ({ ...props }) => {
   const onFinish: Callbacks<FieldType>["onFinish"] = async (values) => {
     setLoading(true);
 
-    const response = await fetch(`/api/book/${bookId}/review`, {
+    const response = await authFetch(`/api/book/${bookId}/review`, {
       method: "POST",
       body: JSON.stringify(values),
     });
