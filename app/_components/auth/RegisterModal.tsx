@@ -19,10 +19,14 @@ type FieldType = {
   confirmPassword: string;
 };
 
-type RegisterModalProps = ModalProps & { onRegister?: () => void };
+type RegisterModalProps = ModalProps & {
+  onRegister?: () => void;
+  onLoginSelected?: () => void;
+};
 
 const RegisterModal: React.FC<RegisterModalProps> = ({
   onRegister,
+  onLoginSelected,
   ...props
 }) => {
   const [registerLoading, setRegisterLoading] = useState(false);
@@ -155,6 +159,18 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
         >
           <Input.Password />
         </Form.Item>
+        <p style={{ textAlign: "right" }}>
+          Ja tens un compte?
+          <a
+            href="#"
+            onClick={() => {
+              if (onLoginSelected) onLoginSelected();
+            }}
+          >
+            {" "}
+            Inicia sessió!
+          </a>
+        </p>
       </Form>
     </Modal>
   );

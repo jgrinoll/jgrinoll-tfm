@@ -6,20 +6,27 @@ import RegisterModal from "./auth/RegisterModal";
 import { useState } from "react";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
+import LoginModal from "./auth/LoginModal";
 
 export default function SuggestRegistrationSection() {
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const user = useAtomValue(userDataAtom);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   if (user) return null;
+
+  const onRegisterSelected = () => {
+    setRegisterModalOpen(true);
+    setLoginModalOpen(false);
+  };
 
   return (
     <section>
       <Title level={1}>Registra&apos;t per fer el teu seguiment</Title>
       <Paragraph>
         Descobreix una manera senzilla i organitzada de gestionar els teus
-        llibres. Registra&apos;t ara i transforma la teva experiència lectora en un
-        viatge completament teu.
+        llibres. Registra&apos;t ara i transforma la teva experiència lectora en
+        un viatge completament teu.
         <br />
         <br />
         <Flex
@@ -35,10 +42,20 @@ export default function SuggestRegistrationSection() {
           </Button>
         </Flex>
       </Paragraph>
+      <LoginModal
+        open={loginModalOpen}
+        onLogin={() => setLoginModalOpen(false)}
+        onCancel={() => setLoginModalOpen(false)}
+        onRegisterSelected={onRegisterSelected}
+      />
       <RegisterModal
         open={registerModalOpen}
         onRegister={() => setRegisterModalOpen(false)}
         onCancel={() => setRegisterModalOpen(false)}
+        onLoginSelected={() => {
+          setLoginModalOpen(true);
+          setRegisterModalOpen(false);
+        }}
       />
     </section>
   );

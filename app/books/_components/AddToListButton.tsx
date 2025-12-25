@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import LoginModal from "@/app/_components/auth/LoginModal";
 import RegisterModal from "@/app/_components/auth/RegisterModal";
 import {
@@ -8,9 +8,9 @@ import {
   updateReadingProgressModalOpen,
   userDataAtom,
 } from "@/app/_lib/jotai/atoms";
-import { authFetch } from "@/app/_lib/utils/authFetch";
 import List, { ListsEnum } from "@/app/_lib/models/ListsEnum";
 import { UserBook } from "@/app/_lib/models/UserBook";
+import { authFetch } from "@/app/_lib/utils/authFetch";
 import { DownOutlined } from "@ant-design/icons";
 import { Button, Dropdown, message, Space } from "antd";
 import dayjs from "dayjs";
@@ -147,6 +147,10 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({
           open={registerModalOpen}
           onRegister={() => setRegisterModalOpen(false)}
           onCancel={() => setRegisterModalOpen(false)}
+          onLoginSelected={() => {
+            setLoginModalOpen(true);
+            setRegisterModalOpen(false);
+          }}
         />
       </>
     );

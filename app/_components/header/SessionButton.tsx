@@ -1,14 +1,14 @@
+import { userDataAtom } from "@/app/_lib/jotai/atoms";
 import { LoginOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar } from "antd";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
+import Link from "next/link";
 import { useState } from "react";
 import LoginModal from "../auth/LoginModal";
 import RegisterModal from "../auth/RegisterModal";
-import { userDataAtom } from "@/app/_lib/jotai/atoms";
-import Link from "next/link";
 
 const SessionButton = () => {
-  const [userData, setUserData] = useAtom(userDataAtom);
+  const userData = useAtomValue(userDataAtom);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
 
@@ -19,10 +19,7 @@ const SessionButton = () => {
 
   return userData ? (
     <Link href={"/profile/"}>
-      <Avatar
-        src={userData.avatar_url}
-        icon={<UserOutlined />}
-      />
+      <Avatar src={userData.avatar_url} icon={<UserOutlined />} />
     </Link>
   ) : (
     <>
@@ -42,6 +39,10 @@ const SessionButton = () => {
         open={registerModalOpen}
         onRegister={() => setRegisterModalOpen(false)}
         onCancel={() => setRegisterModalOpen(false)}
+        onLoginSelected={() => {
+          setLoginModalOpen(true);
+          setRegisterModalOpen(false);
+        }}
       />
     </>
   );
