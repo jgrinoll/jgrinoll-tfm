@@ -10,6 +10,7 @@ import BookInfoTags from "./BookInfoTags";
 import RelatedBookList from "./RelatedBookList";
 import BackButton from "./BackButton";
 import AddToListButton from "../../_components/AddToListButton";
+import ReviewList from "./ReviewList";
 
 interface BookDetailProps {
   book: GoogleBook;
@@ -55,6 +56,7 @@ const BookDetail: React.FC<BookDetailProps> = ({ book }) => {
       </Row>
       <BookInfoTags book={book} />
       <ReviewsInfo bookId={book.id} />
+      <ReviewList bookId={book.id} />
       <RelatedBookList book={book} />
     </Space>
   );
