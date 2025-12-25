@@ -72,7 +72,25 @@ const BookCover: React.FC<BookCoverProps> = ({
   }, [imageLinks, size]);
 
   if (!src) {
-    return null;
+    return (
+      <div
+        style={{
+          borderTopRightRadius: "1rem",
+          borderBottomRightRadius: "1rem",
+          padding: 5,
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#f0f0f0",
+          color: "#999",
+          textAlign: "center",
+        }}
+      >
+        Portada no disponible
+      </div>
+    );
   }
 
   // TODO - Will need a placeholder image if the book doesn't even have "imageLinks"

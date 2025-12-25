@@ -1,3 +1,4 @@
+'use client'
 import LoginModal from "@/app/_components/auth/LoginModal";
 import RegisterModal from "@/app/_components/auth/RegisterModal";
 import {

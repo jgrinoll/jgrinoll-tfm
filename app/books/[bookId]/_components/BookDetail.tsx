@@ -9,6 +9,7 @@ import ReviewsInfo from "../../_components/ReviewsInfo";
 import BookInfoTags from "./BookInfoTags";
 import RelatedBookList from "./RelatedBookList";
 import BackButton from "./BackButton";
+import AddToListButton from "../../_components/AddToListButton";
 
 interface BookDetailProps {
   book: GoogleBook;
@@ -27,6 +28,13 @@ const BookDetail: React.FC<BookDetailProps> = ({ book }) => {
         <Col offset={4} span={16}>
           <Flex justify="center" align="center">
             <BookCover imageLinks={book.volumeInfo.imageLinks} size="largest" />
+          </Flex>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={24}>
+          <Flex justify="center">
+            <AddToListButton bookId={book.id} />
           </Flex>
         </Col>
       </Row>
