@@ -49,11 +49,11 @@ export default async function Page({
   return (
     <>
       <Row>
-        <Col span={8}>
+        <Col span={8} style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "1rem" }}>
           <Avatar
             src={user?.avatar_url}
             icon={<UserOutlined />}
-            style={{ padding: ".5rem", width: "100%", height: "100%" }}
+            style={{ width: "100%", maxWidth: "300px", height: "auto", aspectRatio: "1" }}
           />
         </Col>
         <Col span={16}>
