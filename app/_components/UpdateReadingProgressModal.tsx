@@ -105,6 +105,18 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
       const data = await response.json();
       message.success("S'ha actualitzat el progrés correctament.");
       
+      if (data.gamification?.completedAchievements) {
+        data.gamification.completedAchievements.forEach((achievement: { name: string }) => {
+          message.success(`🏆 Assoliment aconseguit: ${achievement.name}!`, 5);
+        });
+      }
+      
+      if (data.gamification?.completedChallenges) {
+        data.gamification.completedChallenges.forEach((challenge: { title: string }) => {
+          message.success(`✅ Repte completat: ${challenge.title}!`, 5);
+        });
+      }
+      
       if (data.levelUp?.leveledUp) {
         message.success(`🎉 Enhorabona! Has pujat al nivell ${data.levelUp.newLevel}!`, 5);
       }
@@ -128,6 +140,18 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
     if (response.ok) {
       const data = await response.json();
       message.success(`Has acabat de llegir ${book?.title}!`);
+      
+      if (data.gamification?.completedAchievements) {
+        data.gamification.completedAchievements.forEach((achievement: { name: string }) => {
+          message.success(`🏆 Assoliment aconseguit: ${achievement.name}!`, 5);
+        });
+      }
+      
+      if (data.gamification?.completedChallenges) {
+        data.gamification.completedChallenges.forEach((challenge: { title: string }) => {
+          message.success(`✅ Repte completat: ${challenge.title}!`, 5);
+        });
+      }
       
       if (data.levelUp?.leveledUp) {
         message.success(`🎉 Enhorabona! Has pujat al nivell ${data.levelUp.newLevel}!`, 5);

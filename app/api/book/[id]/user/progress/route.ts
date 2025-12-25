@@ -4,6 +4,10 @@ import { ReadingProgress } from "@/app/_lib/models/ReadingProgress";
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { NextResponse } from "next/server";
 import { updateUserPagesAndLevel } from "@/app/_actions/user_actions";
+import {
+  checkAndAwardAchievements,
+  checkAndUpdateChallenges,
+} from "@/app/_actions/gamification_actions";
 
 interface ReadingProgressRowDataPacket extends RowDataPacket, ReadingProgress {}
 export async function GET(
@@ -22,10 +26,9 @@ export async function GET(
 
     const sql =
       "SELECT * FROM reading_progress WHERE user_id = ? AND book_id = ?";
-    const [results] = await dbConnection.execute<ReadingProgressRowDataPacket[]>(
-      sql,
-      [userId, bookId]
-    );
+    const [results] = await dbConnection.execute<
+      ReadingProgressRowDataPacket[]
+    >(sql, [userId, bookId]);
 
     if (results.length === 0) {
       return NextResponse.json(
@@ -85,13 +88,13 @@ export async function POST(
       "SELECT id, pages_read FROM reading_progress WHERE user_id = ? AND book_id = ?",
       [userId, bookId]
     );
-    
+
     let oldPagesRead = 0;
-    
+
     if (existing.length > 0) {
       const rowId = existing[0].id;
       oldPagesRead = existing[0].pages_read || 0;
-      
+
       const sql =
         "UPDATE reading_progress SET pages_read = ?, percentage = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
       const values = [pageCount, percentage ?? null, rowId];
@@ -113,7 +116,7 @@ export async function POST(
 
     const pagesDifference = pageCount - oldPagesRead;
     let levelUpData = null;
-    
+
     if (pagesDifference > 0) {
       const levelResult = await updateUserPagesAndLevel(
         userId,
@@ -133,7 +136,30 @@ export async function POST(
       }
     }
 
-    return NextResponse.json({ ok: true, levelUp: levelUpData }, { status: existing.length > 0 ? 200 : 201 });
+    const completedAchievements = await checkAndAwardAchievements(
+      userId,
+      dbConnection
+    );
+
+    const completedChallenges = await checkAndUpdateChallenges(
+      userId,
+      bookId,
+      pagesDifference,
+      false,
+      dbConnection
+    );
+
+    return NextResponse.json(
+      {
+        ok: true,
+        levelUp: levelUpData,
+        gamification: {
+          completedAchievements,
+          completedChallenges,
+        },
+      },
+      { status: existing.length > 0 ? 200 : 201 }
+    );
   } catch (err) {
     console.error(err);
     return NextResponse.json(

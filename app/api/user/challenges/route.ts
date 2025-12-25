@@ -11,6 +11,7 @@ interface ChallengeWithProgressRow extends RowDataPacket {
   description: string;
   goal_type: "BOOKS" | "PAGES";
   goal_value: number;
+  goal_category: string | null;
   start_date: string;
   end_date: string;
   badge_url: string;
@@ -39,6 +40,7 @@ export async function GET(request: NextRequest) {
         c.description,
         c.goal_type,
         c.goal_value,
+        c.goal_category,
         c.start_date,
         c.end_date,
         c.badge_url,
@@ -71,6 +73,7 @@ export async function GET(request: NextRequest) {
         description: row.description,
         goal_type: row.goal_type,
         goal_value: row.goal_value,
+        goal_category: row.goal_category,
         start_date: row.start_date,
         end_date: row.end_date,
         badge_url: row.badge_url,

@@ -1,6 +1,7 @@
 import { Category } from "../models/Category";
 
 export const CATEGORIES: Omit<Category, "thumbnail">[] = [
+  { label: "Fantasia", value: "Fantasy" },
   { label: "Ficció per a Joves Adults", value: "Young Adult Fiction" },
   { label: "Ficció", value: "Fiction" },
   { label: "Ficció Juvenil", value: "Juvenile Fiction" },

@@ -3,18 +3,14 @@ import dbConnectionPool from "@/app/_lib/db/db";
 import { Connection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { NextResponse } from "next/server";
 import { updateUserPagesAndLevel } from "@/app/_actions/user_actions";
+import { checkAndAwardAchievements, checkAndUpdateChallenges } from "@/app/_actions/gamification_actions";
 
-interface FinishBookRequestBody {
-  review?: unknown;
-}
 export async function POST(
   req: Request,
   context: { params: Promise<{ id: string }> }
 ) {
   let dbConnection;
   try {
-    const { review }: FinishBookRequestBody = await req.json();
-
     // Authorize and get user id
     const sessionInfo = await getSessionInfo();
     if (!sessionInfo) return NextResponse.json({ ok: false }, { status: 401 });
@@ -24,7 +20,6 @@ export async function POST(
     const { id: bookId } = await context.params;
 
     // Check if a row already exists
-    // TODO - Use the pool.getConnection() everywhere...
     dbConnection = await dbConnectionPool.getConnection();
     await dbConnection.beginTransaction();
 
@@ -85,13 +80,30 @@ export async function POST(
         await deleteReadingProgress(rowId, dbConnection);
       }
 
-      if (review) {
-        console.log("Reviews not implemented");
-      }
+
+      const completedAchievements = await checkAndAwardAchievements(
+        userId,
+        dbConnection
+      );
+
+      const completedChallenges = await checkAndUpdateChallenges(
+        userId,
+        bookId,
+        remainingPages,
+        true,
+        dbConnection
+      );
 
       await dbConnection.commit();
 
-      return NextResponse.json({ ok: true, levelUp: levelUpData });
+      return NextResponse.json({
+        ok: true,
+        levelUp: levelUpData,
+        gamification: {
+          completedAchievements,
+          completedChallenges,
+        },
+      });
     } catch (err) {
       dbConnection.rollback();
     }

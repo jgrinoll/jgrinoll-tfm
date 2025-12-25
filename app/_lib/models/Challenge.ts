@@ -6,6 +6,7 @@ export default interface Challenge {
   description: string;
   goal_type: GoalType;
   goal_value: number;
+  goal_category: string | null;
   start_date: string;
   end_date: string;
   badge_url: string;

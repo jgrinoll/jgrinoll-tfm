@@ -10,7 +10,7 @@ interface AchievementRow extends RowDataPacket {
   name: string;
   description: string;
   badge_url: string;
-  condition_type: "BOOKS_READ" | "PAGES_READ" | "STREAK" | "CUSTOM";
+  condition_type: "BOOKS_READ" | "PAGES_READ" | "CUSTOM";
   condition_value: number;
   condition_category: string | null;
 }
@@ -30,7 +30,10 @@ async function calculateProgress(
   userId: number,
   achievement: AchievementRow
 ): Promise<number> {
-  // TODO - Change to switch case
+  if (achievement.condition_type === "CUSTOM") {
+    return 0;
+  }
+
   if (achievement.condition_type === "BOOKS_READ") {
     if (achievement.condition_category) {
       const [results] = await dbConnection.execute<ProgressCount[]>(
