@@ -62,6 +62,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({ user }) => {
                 <MiniBookCard
                   thumbnail={stats.highestRatedBook.thumbnail}
                   title={stats.highestRatedBook.title}
+                  href={`/books/${stats.highestRatedBook.book_id}`}
                 />
                 <Statistic
                   title="Valoració mitjana"
@@ -83,6 +84,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({ user }) => {
                 <MiniBookCard
                   thumbnail={stats.longestBook.thumbnail}
                   title={stats.longestBook.title}
+                  href={`/books/${stats.longestBook.book_id}`}
                 />
                 <Statistic
                   title="Pàgines"
@@ -99,6 +101,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({ user }) => {
                 <MiniBookCard
                   thumbnail={stats.mostReadAuthor.thumbnail}
                   title={stats.mostReadAuthor.authors}
+                  href={`/books/${stats.mostReadAuthor.book_id}`}
                 />
                 <Statistic
                   title="Llibres llegits"
