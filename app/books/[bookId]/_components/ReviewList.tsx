@@ -29,8 +29,10 @@ const ReviewList: React.FC<ReviewListProps> = ({ bookId }) => {
   }
 
   return (
-    <Space vertical style={{ width: "100%" }}>
-      <Title level={3}>Ressenyes</Title>
+    <Space vertical style={{ width: "100%", padding: "24px 0" }}>
+      <Title level={3} style={{ marginBottom: 16 }}>
+        Ressenyes
+      </Title>
       <Flex vertical gap={0}>
         {reviews.map((review) => (
           <ReviewCard key={review.id} review={review} />

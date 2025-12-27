@@ -1,8 +1,6 @@
 import { GoogleBook } from "@/app/_lib/models/GoogleBook";
 import { Col, Flex, Row, Space } from "antd";
-import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
-import Parser from "html-react-parser";
 import React from "react";
 import BookCover from "../../_components/BookCover";
 import ReviewsInfo from "../../_components/ReviewsInfo";
@@ -11,6 +9,7 @@ import RelatedBookList from "./RelatedBookList";
 import BackButton from "./BackButton";
 import AddToListButton from "../../_components/AddToListButton";
 import ReviewList from "./ReviewList";
+import BookDescription from "./BookDescription";
 
 interface BookDetailProps {
   book: GoogleBook;
@@ -36,17 +35,7 @@ const BookDetail: React.FC<BookDetailProps> = ({ book }) => {
             <Flex justify="center">
               <AddToListButton bookId={book.id} />
             </Flex>
-            {/* TODO - Make a better looking expand/collapse button
-        I've thought of limiting max height when not expanded, adding a div with opacity gradient and a down arrow symbolizing the expand */}
-            <Paragraph
-              ellipsis={{
-                rows: 9,
-                expandable: "collapsible",
-                defaultExpanded: false,
-              }}
-            >
-              {Parser(book.volumeInfo.description ?? "<b>Sense descripció</b>")}
-            </Paragraph>
+            <BookDescription description={book.volumeInfo.description ?? ""} />
           </Space>
         </Col>
       </Row>

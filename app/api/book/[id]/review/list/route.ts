@@ -23,7 +23,8 @@ export async function GET(
         r.rating, 
         r.review_text, 
         r.created_at,
-        u.username
+        u.username,
+        u.avatar_url
       FROM reviews r
       INNER JOIN users u ON r.user_id = u.id
       WHERE r.book_id = ?
