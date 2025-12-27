@@ -29,11 +29,8 @@ const ReviewsInfo: React.FC<ReviewsInfoProps> = ({ bookId }) => {
     fetchStats();
   }, [bookId]);
 
-  if (!stats || stats.review_count === 0) {
-    return <Paragraph style={{ margin: 0 }}>Sense ressenyes</Paragraph>;
-  }
-
-  const averageRating = Number(stats.average_rating);
+  const averageRating = stats ? Number(stats.average_rating) : 0;
+  const reviewCount = stats?.review_count ?? 0;
 
   return (
     <Flex
@@ -43,9 +40,16 @@ const ReviewsInfo: React.FC<ReviewsInfoProps> = ({ bookId }) => {
       gap={isMobile ? 4 : 8}
     >
       <Rate disabled value={averageRating} allowHalf />
-      <Paragraph style={{ margin: 0, fontSize: isMobile ? 12 : 14 }}>
-        {averageRating.toFixed(1)} ({stats.review_count}{" "}
-        {stats.review_count === 1 ? "ressenya" : "ressenyes"})
+      <Paragraph
+        style={{
+          margin: 0,
+          fontSize: isMobile ? 12 : 14,
+          color: reviewCount === 0 ? "#8c8c8c" : undefined,
+        }}
+      >
+        {reviewCount === 0
+          ? "Sense ressenyes"
+          : `${averageRating.toFixed(1)} (${reviewCount} ${reviewCount === 1 ? "ressenya" : "ressenyes"})`}
       </Paragraph>
     </Flex>
   );
