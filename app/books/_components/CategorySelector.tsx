@@ -2,6 +2,7 @@
 import { Select } from "antd";
 import { CATEGORIES } from "@/app/_lib/utils/category_utils";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 
 interface CategorySelectorProps {
   subject?: string;
@@ -15,15 +16,18 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
   minRating,
 }) => {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   const handleCategoryChange = (value: string) => {
-    const params = new URLSearchParams();
-    if (searchQuery) params.set("q", searchQuery);
-    if (minRating) params.set("minRating", minRating.toString());
-    if (value) params.set("subject", value);
+    startTransition(() => {
+      const params = new URLSearchParams();
+      if (searchQuery) params.set("q", searchQuery);
+      if (minRating) params.set("minRating", minRating.toString());
+      if (value) params.set("subject", value);
 
-    const url = params.toString() ? `/books?${params.toString()}` : "/books";
-    router.push(url);
+      const url = params.toString() ? `/books?${params.toString()}` : "/books";
+      router.push(url);
+    });
   };
 
   return (
@@ -33,6 +37,8 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
         value={subject || ""}
         onChange={handleCategoryChange}
         style={{ minWidth: "200px" }}
+        loading={isPending}
+        disabled={isPending}
       >
         <Select.Option value="">Totes les categories</Select.Option>
         {CATEGORIES.map((category) => (

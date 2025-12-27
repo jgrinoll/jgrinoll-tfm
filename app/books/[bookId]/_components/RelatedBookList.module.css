@@ -5,9 +5,20 @@
   overflow-x: auto;
 }
 
-.related-books-list li > a {
+.related-books-list li > div {
   display: block;
   height: 100%;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.related-books-list li > div:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.related-books-list li > div:active {
+  transform: scale(1.02);
+  opacity: 0.8;
 }
 
 @media (min-width: 640px) {

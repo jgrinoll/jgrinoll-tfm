@@ -5,11 +5,12 @@ import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
 import Text from "antd/es/typography/Text";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useTransition } from "react";
 import BookCover from "./BookCover";
 import ReviewsInfo from "./ReviewsInfo";
 import AddToListButton from "./AddToListButton";
 import { UserBook } from "@/app/_lib/models/UserBook";
+import Parser from "html-react-parser";
 
 interface BookCardProps {
   book: GoogleBook;
@@ -17,6 +18,14 @@ interface BookCardProps {
 }
 const BookCard: React.FC<BookCardProps> = ({ book, userBook }) => {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const handleViewDetail = () => {
+    startTransition(() => {
+      router.push(`/books/${book.id}`);
+    });
+  };
+
   return (
     <Card key={book.id} style={{ marginBottom: "16px" }}>
       <Row gutter={[16, 16]}>
@@ -62,7 +71,7 @@ const BookCard: React.FC<BookCardProps> = ({ book, userBook }) => {
                 style={{ marginTop: "0.5rem", marginBottom: "0.5rem", fontSize: "0.875rem" }}
                 className="book-description"
               >
-                {book.volumeInfo.description}
+                {Parser(book.volumeInfo.description)}
               </Paragraph>
             )}
 
@@ -91,7 +100,9 @@ const BookCard: React.FC<BookCardProps> = ({ book, userBook }) => {
               <Button
                 type="primary"
                 size="small"
-                onClick={() => router.push(`/books/${book.id}`)}
+                onClick={handleViewDetail}
+                loading={isPending}
+                disabled={isPending}
               >
                 Veure detall
               </Button>

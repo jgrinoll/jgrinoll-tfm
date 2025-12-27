@@ -1,12 +1,12 @@
 "use client";
 
-import { SearchOutlined } from "@ant-design/icons";
+import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { Flex, Form, Input } from "antd";
 import { Header as AntdHeader } from "antd/es/layout/layout";
 import { useSetAtom } from "jotai";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useTransition } from "react";
 import { userDataAtom } from "../../_lib/jotai/atoms";
 import UserDTO from "../../_lib/models/UserDTO";
 import SessionButton from "./SessionButton";
@@ -19,12 +19,15 @@ type FieldType = {
 const Header: React.FC<HeaderProps> = ({ user }) => {
   const router = useRouter();
   const setUserData = useSetAtom(userDataAtom);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => setUserData(user), [user, setUserData]);
 
   const onSearch = (formData: FieldType) => {
     if (formData.query) {
-      router.push(`/books?q=${encodeURIComponent(formData.query)}`);
+      startTransition(() => {
+        router.push(`/books?q=${encodeURIComponent(formData.query)}`);
+      });
     }
   };
 
@@ -80,6 +83,12 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
                     style={{ marginRight: 5, marginLeft: 5, fontSize: 16 }}
                   />
                 }
+                suffix={
+                  isPending ? (
+                    <LoadingOutlined style={{ fontSize: 16 }} />
+                  ) : null
+                }
+                disabled={isPending}
               />
             </Form.Item>
           </Flex>

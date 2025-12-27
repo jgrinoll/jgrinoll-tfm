@@ -1,6 +1,5 @@
 import { GoogleBook } from "@/app/_lib/models/GoogleBook";
 import React from "react";
-import Link from "next/link";
 import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
 import { getShortTitle } from "@/app/_lib/utils/book_utils";
@@ -30,9 +29,11 @@ const RelatedBookList: React.FC<RelatedBookListProps> = async ({ book }) => {
 
           return (
             <li key={relatedBook.id}>
-              <Link href={`/books/${relatedBook.id}`}>
-                <MiniBookCard thumbnail={thumbnail} title={shortTitle} />
-              </Link>
+              <MiniBookCard
+                thumbnail={thumbnail}
+                title={shortTitle}
+                href={`/books/${relatedBook.id}`}
+              />
             </li>
           );
         })}

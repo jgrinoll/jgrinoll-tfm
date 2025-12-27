@@ -11,6 +11,20 @@
   margin-right: 0.75rem;
 }
 
+.categories-list li > div {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.categories-list li > div:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.categories-list li > div:active {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
 @media (min-width: 768px) {
   .categories-list {
     padding: 12px 0;

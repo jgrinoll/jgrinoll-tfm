@@ -1,7 +1,6 @@
 import "server-only";
 import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
-import Link from "next/link";
 import CategoryCard from "./CategoryCard";
 import styles from "./CategoriesSection.module.css";
 import { getCategoriesWithThumbnails } from "../api/categories/route";
@@ -17,9 +16,11 @@ const CategoriesSection = async () => {
         {categories.map(({ value, label, thumbnail }) => {
           return (
             <li key={value}>
-              <Link href={`/books?subject=${value}`}>
-                <CategoryCard thumbnail={thumbnail} name={label} />
-              </Link>
+              <CategoryCard
+                thumbnail={thumbnail}
+                name={label}
+                href={`/books?subject=${value}`}
+              />
             </li>
           );
         })}
