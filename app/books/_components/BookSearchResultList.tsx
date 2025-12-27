@@ -73,7 +73,7 @@ const BookSearchResultList: React.FC<BookSearchResultListProps> = ({
 
   return (
     <>
-      <ul style={{ listStyleType: "none", padding: 5 }}>
+      <ul style={{ listStyleType: "none", padding: 5, maxWidth: "1000px", margin: "0 auto" }}>
         <InfiniteScroll
           dataLength={books.length}
           next={onNext}
