@@ -100,7 +100,7 @@ const ListsTab: React.FC<ListsTabProps> = () => {
           books &&
           books.map((book) => (
             <li key={book.id}>
-              <MiniBookCard title={book.title} thumbnail={book.thumbnail} />
+              <MiniBookCard title={book.title} thumbnail={book.thumbnail} href={`/books/${book.id}`} />
             </li>
           ))}
       </ul>
