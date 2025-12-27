@@ -70,6 +70,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   return (
     <Modal
       {...props}
+      width="95%"
+      style={{ maxWidth: 550 }}
       footer={
         <Flex justify="center">
           <Button

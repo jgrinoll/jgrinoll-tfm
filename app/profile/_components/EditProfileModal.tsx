@@ -68,6 +68,8 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
   return (
     <Modal
       {...props}
+      width="95%"
+      style={{ maxWidth: 600 }}
       footer={
         <Flex justify="center">
           <Button

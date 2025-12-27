@@ -49,15 +49,15 @@ export default async function Page({
 
   return (
     <>
-      <Row>
-        <Col span={8} style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "1rem" }}>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={24} md={8} lg={8} xl={6} style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "1rem" }}>
           <Avatar
             src={user?.avatar_url}
             icon={<UserOutlined />}
             style={{ width: "100%", maxWidth: "300px", height: "auto", aspectRatio: "1" }}
           />
         </Col>
-        <Col span={16}>
+        <Col xs={24} sm={24} md={16} lg={16} xl={18}>
           <Flex
             justify="space-between"
             vertical

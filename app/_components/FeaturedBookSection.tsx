@@ -27,9 +27,9 @@ const FeaturedBookSection: React.FC<FeaturedBookSectionProps> = async ({
       <Title level={1} style={{ textAlign: "center", marginBottom: ".75rem" }}>
         {getShortTitle(book.title)}
       </Title>
-      <Row>
-        <Col span={16}>
-          <Space vertical>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={24} md={16} lg={16} xl={16}>
+          <Space vertical style={{ width: "100%" }}>
             <Paragraph
               ellipsis={{
                 rows: 9,
@@ -45,7 +45,7 @@ const FeaturedBookSection: React.FC<FeaturedBookSectionProps> = async ({
             </Flex>
           </Space>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={24} md={8} lg={8} xl={8}>
           <Flex
             justify="center"
             align="center"

@@ -11,6 +11,10 @@ export const appTheme: ThemeConfig = {
     paddingXL: 20,
     controlHeight: 44,
     fontSize: 16,
+    screenSM: 640,
+    screenMD: 768,
+    screenLG: 1024,
+    screenXL: 1280,
   },
   components: {
     Button: {

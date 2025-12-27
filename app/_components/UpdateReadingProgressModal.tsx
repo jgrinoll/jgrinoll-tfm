@@ -206,6 +206,8 @@ const UpdateReadingProgressModal: React.FC<ModalProps> = ({ ...props }) => {
     <>
       <Modal
         {...props}
+        width="95%"
+        style={{ maxWidth: 650 }}
         onCancel={closeModal}
         onOk={closeModal}
         footer={null}

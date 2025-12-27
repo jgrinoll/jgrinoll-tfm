@@ -1,6 +1,6 @@
 .continue-reading-list {
   list-style-type: none;
-  padding: 5;
+  padding: 5px;
   white-space: nowrap;
   overflow-x: auto;
   padding-bottom: 0.75rem;
@@ -10,6 +10,7 @@
   position: relative;
   display: inline-block;
   margin-right: 0.75rem;
+  cursor: pointer;
 }
 
 .progress-indicator {
@@ -18,4 +19,37 @@
   right: 0;
   transform: translate(25%, 25%);
   z-index: 100;
+}
+
+@media (min-width: 768px) {
+  .continue-reading-list {
+    padding: 8px;
+    padding-bottom: 1rem;
+  }
+
+  .continue-reading-list li {
+    margin-right: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .continue-reading-list {
+    padding: 12px;
+    padding-bottom: 1.25rem;
+  }
+
+  .continue-reading-list li {
+    margin-right: 1.25rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .continue-reading-list {
+    padding: 16px;
+    padding-bottom: 1.5rem;
+  }
+
+  .continue-reading-list li {
+    margin-right: 1.5rem;
+  }
 }

@@ -10,13 +10,13 @@
   height: 100%;
 }
 
-@media (min-width: 481px) {
+@media (min-width: 640px) {
   .related-books-list li {
     height: 300px;
   }
 }
 
-@media (min-width: 769px) {
+@media (min-width: 768px) {
   .related-books-list li {
     height: 350px;
   }

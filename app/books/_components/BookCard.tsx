@@ -18,8 +18,8 @@ const BookCard: React.FC<BookCardProps> = ({ book, userBook }) => {
   const router = useRouter();
   return (
     <Card key={book.id} style={{ marginBottom: "16px" }}>
-      <Row>
-        <Col span={8}>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={8} md={8} lg={6} xl={6}>
           <Flex
             justify="center"
             align="center"
@@ -28,7 +28,7 @@ const BookCard: React.FC<BookCardProps> = ({ book, userBook }) => {
             <BookCover imageLinks={book.volumeInfo.imageLinks} />
           </Flex>
         </Col>
-        <Col span={16} style={{ paddingLeft: "16px" }}>
+        <Col xs={24} sm={16} md={16} lg={18} xl={18}>
           <Flex vertical style={{ width: "100%", height: "100%" }}>
             <Title level={5} style={{ margin: 0 }}>
               {book.volumeInfo.title}
@@ -37,7 +37,6 @@ const BookCard: React.FC<BookCardProps> = ({ book, userBook }) => {
               <small>{book.volumeInfo.authors?.join(", ")}</small>
             </Paragraph>
             <ReviewsInfo bookId={book.id} />
-            {/* // TODO - En pantalles estretes, el botons estan massa junst. */}
             <Flex
               justify="space-evenly"
               style={{
@@ -46,7 +45,7 @@ const BookCard: React.FC<BookCardProps> = ({ book, userBook }) => {
                 marginBottom: ".5rem",
               }}
               wrap="wrap"
-              gap={5}
+              gap={8}
             >
               <Button
                 type="primary"

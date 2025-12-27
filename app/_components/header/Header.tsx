@@ -12,14 +12,6 @@ import UserDTO from "../../_lib/models/UserDTO";
 import SessionButton from "./SessionButton";
 import Image from "next/image";
 
-/** This component must:
- * - Display the logo at the top left of the page with a link to the start page
- * - Display a search bar
- * - If the user is logged in:
- *      - Display the logout button on the top right
- * - If the user is not logged in
- *      - Display the user image, which navigates to the user profile when clicked.
- */
 type HeaderProps = { user: UserDTO | null };
 type FieldType = {
   query: string;

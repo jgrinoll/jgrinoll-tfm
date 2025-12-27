@@ -102,6 +102,8 @@ const BookReviewModal: React.FC<ModalProps> = ({ ...props }) => {
     <>
       <Modal
         {...props}
+        width="95%"
+        style={{ maxWidth: 700 }}
         onCancel={closeModal}
         onOk={closeModal}
         footer={null}

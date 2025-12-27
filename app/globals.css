@@ -68,3 +68,44 @@ section {
 h1 {
   font-weight: 900 !important;
 }
+
+.main-content {
+  flex: 1;
+  padding: 5px;
+}
+
+@media (min-width: 768px) {
+  .main-content {
+    padding: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-content {
+    padding: 16px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .main-content {
+    padding: 20px;
+  }
+}
+
+.container-max-width {
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 768px) {
+  section {
+    padding-top: 0.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  section {
+    padding-top: 1rem;
+  }
+}

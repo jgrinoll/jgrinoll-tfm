@@ -25,33 +25,29 @@ const BookDetail: React.FC<BookDetailProps> = ({ book }) => {
       <Title level={2} style={{ margin: 0, fontWeight: "normal" }}>
         {book.volumeInfo.authors?.join(", ")}
       </Title>
-      <Row>
-        <Col offset={4} span={16}>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={24} md={10} lg={8} xl={6}>
           <Flex justify="center" align="center">
             <BookCover imageLinks={book.volumeInfo.imageLinks} size="largest" />
           </Flex>
         </Col>
-      </Row>
-      <Row>
-        <Col span={24}>
-          <Flex justify="center">
-            <AddToListButton bookId={book.id} />
-          </Flex>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={24}>
-          {/* TODO - Make a better looking expand/collapse button
+        <Col xs={24} sm={24} md={14} lg={16} xl={18}>
+          <Space vertical style={{ width: "100%" }}>
+            <Flex justify="center">
+              <AddToListButton bookId={book.id} />
+            </Flex>
+            {/* TODO - Make a better looking expand/collapse button
         I've thought of limiting max height when not expanded, adding a div with opacity gradient and a down arrow symbolizing the expand */}
-          <Paragraph
-            ellipsis={{
-              rows: 9,
-              expandable: "collapsible",
-              defaultExpanded: false,
-            }}
-          >
-            {Parser(book.volumeInfo.description ?? "<b>Sense descripció</b>")}
-          </Paragraph>
+            <Paragraph
+              ellipsis={{
+                rows: 9,
+                expandable: "collapsible",
+                defaultExpanded: false,
+              }}
+            >
+              {Parser(book.volumeInfo.description ?? "<b>Sense descripció</b>")}
+            </Paragraph>
+          </Space>
         </Col>
       </Row>
       <BookInfoTags book={book} />

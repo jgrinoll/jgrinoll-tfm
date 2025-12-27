@@ -45,7 +45,9 @@ export default async function RootLayout({
                   <Header user={user} />
                   <UpdateReadingProgressModal />
                   <BookReviewModal />
-                  <Content style={{ flex: 1, padding: 5 }}>{children}</Content>
+                  <Content className="main-content">
+                    <div className="container-max-width">{children}</div>
+                  </Content>
                   <Footer />
                 </Flex>
               </Layout>

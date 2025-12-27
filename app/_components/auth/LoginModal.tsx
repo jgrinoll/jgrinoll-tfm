@@ -60,7 +60,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
   return (
     <>
-      <Modal {...props} title="Iniciar Sessió" footer={null}>
+      <Modal {...props} width="95%" style={{ maxWidth: 500 }} title="Iniciar Sessió" footer={null}>
         <Form
           name="login-form"
           layout="vertical"
